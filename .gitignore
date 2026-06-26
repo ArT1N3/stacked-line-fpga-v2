@@ -27,3 +27,13 @@ Thumbs.db
 
 # Windows
 desktop.ini
+# GHDL build artifacts
+*.cf
+*.ghw
+*.vcd
+
+# IDE user config
+*.gprj.user
+
+# Synthesis temp
+work-obj93.cf

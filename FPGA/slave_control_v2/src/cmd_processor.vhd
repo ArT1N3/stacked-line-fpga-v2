@@ -220,11 +220,15 @@ begin
               collect_idx   <= 0;
 
             -- 继电器控制
-            when CMD_RLY_CTRL | CMD_BROADCAST_RLY =>
+            when x"03" =>  -- CMD_RLY_CTRL
+              state <= ST_EXECUTE;
+            when x"0D" =>  -- CMD_BROADCAST_RLY
               state <= ST_EXECUTE;
 
             -- 配置写入
-            when CMD_CFG_WRITE | CMD_BROADCAST_CFG =>
+            when x"04" =>  -- CMD_CFG_WRITE
+              state <= ST_EXECUTE;
+            when x"0E" =>  -- CMD_BROADCAST_CFG
               state <= ST_EXECUTE;
 
             -- 故障清除
@@ -288,7 +292,7 @@ begin
                   buf_wr_en   <= '1';
                 when 5 =>
                   buf_wr_addr <= std_logic_vector(to_unsigned(10, 8));
-                  buf_wr_data <= "0000" & module_count;
+                  buf_wr_data <= "000000" & module_count;
                   buf_wr_en   <= '1';
                 when 6 =>
                   buf_wr_addr <= std_logic_vector(to_unsigned(11, 8));
@@ -498,10 +502,11 @@ begin
         --=================================================================
         when ST_EXECUTE =>
           case cmd_in is
-            when CMD_RLY_CTRL | CMD_BROADCAST_RLY =>
-              -- 读取 PAYLOAD[0]=mask, PAYLOAD[1]=value
-              -- 此处在单周期内无法完成读取+写入，需额外状态
-              -- 简化处理：在顶层 ring_forward 中用额外逻辑处理
+            when x"03" =>  -- CMD_RLY_CTRL
+              relay_update <= '1';
+              proc_done    <= '1';
+              state        <= ST_IDLE;
+            when x"0D" =>  -- CMD_BROADCAST_RLY
               relay_update <= '1';
               proc_done    <= '1';
               state        <= ST_IDLE;

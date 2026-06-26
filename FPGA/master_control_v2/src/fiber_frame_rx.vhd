@@ -110,7 +110,7 @@ architecture rtl of fiber_frame_rx is
   --===========================================================================
   -- 内部信号
   --===========================================================================
-  signal buf_wr_addr  : integer range 0 to 255;  -- 缓冲写地址
+  signal buf_wr_ptr   : integer range 0 to 255;  -- 缓冲写指针（内部）
   signal byte_count   : integer range 0 to 255;  -- 当前阶段已接收字节计数
   signal exp_len      : integer range 0 to 255;  -- 期望的载荷长度（来自 LEN 字段）
   signal escape_flag  : std_logic;               -- 转义标志（收到 0x7D 后置位）
@@ -119,6 +119,11 @@ architecture rtl of fiber_frame_rx is
   signal crc_ok       : std_logic;               -- CRC 校验通过
   signal err_cnt      : unsigned(15 downto 0);   -- CRC 错误计数器
   signal rx_lk_d1     : std_logic;               -- rx_lk 延迟（边沿检测）
+
+  -- 内部写通道（状态机→缓冲，避免多驱动）
+  signal rx_wr_en     : std_logic;
+  signal rx_wr_data   : std_logic_vector(7 downto 0);
+  signal rx_wr_addr   : integer range 0 to 255;
 
   -- 接收阶段字节计数目标
   signal hdr_target   : integer range 0 to 5;    -- HEADER 阶段目标=5
@@ -134,7 +139,7 @@ begin
   begin
     if rst = '0' then
       state           <= ST_IDLE;
-      buf_wr_addr     <= 0;
+      buf_wr_ptr      <= 0;
       byte_count      <= 0;
       exp_len         <= 0;
       escape_flag     <= '0';
@@ -151,16 +156,13 @@ begin
       frame_valid     <= '0';
       frame_err       <= '0';
       err_code        <= (others => '0');
-      -- 初始化帧缓冲
-      for i in 0 to 255 loop
-        frame_buf(i)  <= (others => '0');
-      end loop;
 
     elsif rising_edge(clk) then
       -- 默认值
       frame_valid <= '0';
       frame_err   <= '0';
       rx_lk_d1    <= rx_lk;
+      rx_wr_en    <= '0';
 
       case state is
 
@@ -168,7 +170,7 @@ begin
         -- ST_IDLE: 等待 SOF (0x7E)
         --=================================================================
         when ST_IDLE =>
-          buf_wr_addr <= 0;
+          buf_wr_ptr  <= 0;
           byte_count  <= 0;
           exp_len     <= 0;
           escape_flag <= '0';
@@ -197,9 +199,11 @@ begin
               escape_flag <= '1';
             else
               -- 处理字节
-              frame_buf(buf_wr_addr) <= rx_byte;
+              rx_wr_data <= rx_byte;
+              rx_wr_addr <= buf_wr_ptr;
+              rx_wr_en   <= '1';
               crc_calc <= crc16_update(crc_calc, rx_byte);
-              buf_wr_addr <= buf_wr_addr + 1;
+              buf_wr_ptr <= buf_wr_ptr + 1;
               byte_count  <= byte_count + 1;
 
               -- 收到 LEN 后确定载荷长度
@@ -248,21 +252,27 @@ begin
               -- 去填充处理
               if escape_flag = '1' then
                 if rx_byte = x"5E" then
-                  frame_buf(buf_wr_addr) <= x"7E";
+                  rx_wr_data <= x"7E";
+                  rx_wr_addr <= buf_wr_ptr;
+                  rx_wr_en   <= '1';
                   crc_calc <= crc16_update(crc_calc, x"7E");
                 elsif rx_byte = x"5D" then
-                  frame_buf(buf_wr_addr) <= x"7D";
+                  rx_wr_data <= x"7D";
+                  rx_wr_addr <= buf_wr_ptr;
+                  rx_wr_en   <= '1';
                   crc_calc <= crc16_update(crc_calc, x"7D");
                 else
                   state    <= ST_ERROR;
                   err_code <= "100";  -- 无效转义序列
                 end if;
               else
-                frame_buf(buf_wr_addr) <= rx_byte;
+                rx_wr_data <= rx_byte;
+                rx_wr_addr <= buf_wr_ptr;
+                rx_wr_en   <= '1';
                 crc_calc <= crc16_update(crc_calc, rx_byte);
               end if;
 
-              buf_wr_addr <= buf_wr_addr + 1;
+              buf_wr_ptr <= buf_wr_ptr + 1;
               byte_count  <= byte_count + 1;
               escape_flag <= '0';
 
@@ -371,16 +381,19 @@ begin
   buf_rd_data <= frame_buf(to_integer(unsigned(buf_rd_addr)));
 
   --===========================================================================
-  -- 外部写端口（cmd_processor 修改缓冲用，如构建响应/追加数据）
+  -- 帧缓冲统一写进程（单点写入，避免多驱动）
+  -- 优先级：外部写（cmd_processor）> 内部写（状态机接收）
   --===========================================================================
-  p_ext_write : process(clk)
+  p_buf_write : process(clk)
   begin
     if rising_edge(clk) then
       if buf_wr_en = '1' then
         frame_buf(to_integer(unsigned(buf_wr_addr))) <= buf_wr_data;
+      elsif rx_wr_en = '1' then
+        frame_buf(rx_wr_addr) <= rx_wr_data;
       end if;
     end if;
-  end process p_ext_write;
+  end process p_buf_write;
 
   --===========================================================================
   -- 输出计数器

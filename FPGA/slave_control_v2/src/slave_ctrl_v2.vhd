@@ -55,7 +55,7 @@ architecture rtl of slave_ctrl_v2 is
   end component;
 
   component rxd_clk is
-    port (clk : in std_logic; clk_out : out std_logic);
+    port (clk, rst : in std_logic; clk_115200 : out std_logic);
   end component;
 
   component com_rx is
@@ -94,7 +94,8 @@ architecture rtl of slave_ctrl_v2 is
       tx_busy : in std_logic;
       relay_ctrl, relay_mask : out std_logic_vector(7 downto 0);
       relay_update, fault_clear, soft_reset : out std_logic;
-      config_write, config_id : out std_logic_vector(7 downto 0);
+      config_write : out std_logic;
+      config_id : out std_logic_vector(7 downto 0);
       config_data : out std_logic_vector(7 downto 0);
       addr_assign, write_flash : out std_logic;
       new_address : out std_logic_vector(7 downto 0);
@@ -132,8 +133,8 @@ architecture rtl of slave_ctrl_v2 is
   signal tx_serial     : std_logic;
 
   -- 故障检测
-  signal short_masked  : std_logic_vector(9 downto 0);  -- en_err_chk 输出（10位）
-  signal short_4ch     : std_logic_vector(3 downto 0);  -- 低4位=实际输入
+  signal short_masked  : std_logic_vector(10 downto 1);  -- en_err_chk 输出（10位，范围10..1）
+  signal short_4ch     : std_logic_vector(3 downto 0);   -- 低4位=实际输入(映射到4..1)
   signal fault_latched : std_logic_vector(3 downto 0);
   signal fault_clear   : std_logic;
 
@@ -143,10 +144,13 @@ architecture rtl of slave_ctrl_v2 is
   signal relay_update  : std_logic;
   signal frame_active  : std_logic;
 
+  -- 拼接信号（避免端口映射中的切片聚合）
+  signal fault_in_8    : std_logic_vector(7 downto 0);
+  signal relay_in_8    : std_logic_vector(7 downto 0);
+  signal relay_out_int : std_logic_vector(3 downto 0);  -- 内部继电器信号（避免读out端口）
+
   -- 常量
   constant MODULE_CNT  : std_logic_vector(1 downto 0) := "11";  -- 默认4模块
-  constant VCC          : std_logic := '1';
-  constant GND          : std_logic := '0';
 
 begin
 
@@ -160,7 +164,7 @@ begin
   -- 2. 波特率时钟生成（50MHz / 52 ≈ 961.5kHz）
   --=======================================================================
   u_clk_gen : rxd_clk
-    port map (clk => clk_50M, clk_out => clk_uart);
+    port map (clk => clk_50M, rst => rst_n, clk_115200 => clk_uart);
 
   --=======================================================================
   -- 3. UART 字节接收器
@@ -175,15 +179,19 @@ begin
   -- en_err_chk 是 10bit 版本，我们只用低 4bit
   u_en_chk : en_err_chk
     port map (
-      en   => rxd_filtered,
-      in1(10 downto 5) => (others => '1'),  -- 未用通道接高
-      in1(4)  => short_in(3),
-      in1(3)  => short_in(2),
-      in1(2)  => short_in(1),
-      in1(1)  => short_in(0),
-      out1 => short_masked
+      en             => rxd_filtered,
+      in1(10 downto 5) => "111111",
+      in1(4)         => short_in(3),
+      in1(3)         => short_in(2),
+      in1(2)         => short_in(1),
+      in1(1)         => short_in(0),
+      out1           => short_masked
     );
-  short_4ch <= short_masked(3 downto 0);  -- 提取低4位
+  short_4ch <= short_masked(4 downto 1);  -- 提取通道1-4
+
+  -- 拼接8位信号用于 ring_forward 接口
+  fault_in_8 <= "0000" & fault_latched;
+  relay_in_8 <= "0000" & relay_out_int;
 
   --=======================================================================
   -- 5. 故障检测器（4通道，32级DDR滤波+锁存）
@@ -208,10 +216,8 @@ begin
       rst            => rst_n,
       my_address     => address,
       module_count   => MODULE_CNT,
-      fault_in(3 downto 0)  => fault_latched,
-      fault_in(7 downto 4)  => (others => '0'),
-      relay_in(3 downto 0)  => relay_out,
-      relay_in(7 downto 4)  => (others => '0'),
+      fault_in       => fault_in_8,
+      relay_in       => relay_in_8,
       module_present => "1111",  -- 假设4模块全在线
       temp_in        => (others => '0'),  -- 无温度传感器（GW1N-1C不接LM75B）
       vcc_in         => (others => '0'),  -- 无电压监控
@@ -253,17 +259,18 @@ begin
   p_relay : process(clk_50M, rst_n)
   begin
     if rst_n = '0' then
-      relay_out <= (others => '0');
+      relay_out_int <= (others => '0');
     elsif rising_edge(clk_50M) then
       if relay_update = '1' then
         for i in 0 to 3 loop
           if relay_mask(i) = '1' then
-            relay_out(i) <= relay_ctrl(i);
+            relay_out_int(i) <= relay_ctrl(i);
           end if;
         end loop;
       end if;
     end if;
   end process p_relay;
+  relay_out <= relay_out_int;
 
   -- 故障 LED（直连故障锁存输出）
   fault_led  <= fault_latched;

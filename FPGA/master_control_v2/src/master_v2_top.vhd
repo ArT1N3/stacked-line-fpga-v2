@@ -106,7 +106,7 @@ architecture rtl of master_v2_top is
     port (in1, clk : in std_logic; o1 : out std_logic);
   end component;
   component rxd_clk is
-    port (clk : in std_logic; clk_out : out std_logic);
+    port (clk, rst : in std_logic; clk_115200 : out std_logic);
   end component;
   component com_rx is
     port (clk, din : in std_logic;
@@ -148,7 +148,7 @@ begin
     port map (in1 => fiber_rx, clk => clk_50M, o1 => fiber_rx_filt);
 
   u_clk_uart : rxd_clk
-    port map (clk => clk_50M, clk_out => clk_uart);
+    port map (clk => clk_50M, rst => '1', clk_115200 => clk_uart);
 
   u_com_rx_fiber : com_rx
     port map (clk => clk_uart, din => fiber_rx_filt,

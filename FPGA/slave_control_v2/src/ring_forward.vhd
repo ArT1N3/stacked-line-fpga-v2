@@ -98,6 +98,14 @@ architecture rtl of ring_forward is
   signal proc_rd_addr  : std_logic_vector(7 downto 0);
   signal proc_rd_data  : std_logic_vector(7 downto 0);
 
+  -- 帧缓冲写 MUX：cmd_processor 写 或 ring_forward 直接写（ERR标志等）
+  signal fwd_wr_data   : std_logic_vector(7 downto 0);
+  signal fwd_wr_addr   : std_logic_vector(7 downto 0);
+  signal fwd_wr_en     : std_logic;
+  signal buf_wr_data_m : std_logic_vector(7 downto 0);
+  signal buf_wr_addr_m : std_logic_vector(7 downto 0);
+  signal buf_wr_en_m   : std_logic;
+
   -- 缓冲读写地址（TX/Proc 共享读端口，通过 MUX 切换）
   signal buf_rd_addr   : std_logic_vector(7 downto 0);
   signal buf_rd_data   : std_logic_vector(7 downto 0);
@@ -135,9 +143,9 @@ begin
       rx_busy     => rx_busy,
       buf_rd_data => rx_buf_rd_data,
       buf_rd_addr => buf_rd_addr,
-      buf_wr_data => proc_wr_data,
-      buf_wr_addr => proc_wr_addr,
-      buf_wr_en   => proc_wr_en,
+      buf_wr_data => buf_wr_data_m,
+      buf_wr_addr => buf_wr_addr_m,
+      buf_wr_en   => buf_wr_en_m,
       flags_out   => rx_flags,
       dst_out     => rx_dst,
       src_out     => rx_src,
@@ -222,6 +230,13 @@ begin
   -- fiber_frame_tx 的 buf_rd_addr 直接驱动 buf_rd_addr（见下方）
 
   --=========================================================================
+  -- 帧缓冲写 MUX：来自 cmd_processor 或 ring_forward 直接写
+  --=========================================================================
+  buf_wr_data_m <= fwd_wr_data when fwd_wr_en = '1' else proc_wr_data;
+  buf_wr_addr_m <= fwd_wr_addr when fwd_wr_en = '1' else proc_wr_addr;
+  buf_wr_en_m   <= fwd_wr_en or proc_wr_en;
+
+  --=========================================================================
   -- 地址匹配
   --=========================================================================
   is_bcast     <= rx_flags(6);
@@ -238,11 +253,14 @@ begin
       proc_start   <= '0';
       hop_counter  <= (others => '0');
       frame_active <= '0';
-      buf_rd_addr  <= (others => '0');
+      fwd_wr_en    <= '0';
+      fwd_wr_data  <= (others => '0');
+      fwd_wr_addr  <= (others => '0');
 
     elsif rising_edge(clk) then
       tx_start   <= '0';
       proc_start <= '0';
+      fwd_wr_en  <= '0';
 
       case fwd_state is
 
@@ -270,11 +288,11 @@ begin
           end if;
 
         when ST_FORWARD_PREP =>
-          -- 错误帧置 ERR 标志
+          -- 错误帧置 ERR 标志（通过独立写通道）
           if rx_frame_err = '1' then
-            proc_wr_data <= rx_flags or x"20";
-            proc_wr_addr <= x"00";
-            proc_wr_en   <= '1';
+            fwd_wr_data <= rx_flags or x"20";
+            fwd_wr_addr <= x"00";
+            fwd_wr_en   <= '1';
           end if;
           fwd_state <= ST_FORWARD;
 

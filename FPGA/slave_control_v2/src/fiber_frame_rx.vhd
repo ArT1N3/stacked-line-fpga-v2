@@ -110,7 +110,7 @@ architecture rtl of fiber_frame_rx is
   --===========================================================================
   -- 内部信号
   --===========================================================================
-  signal buf_wr_addr  : integer range 0 to 255;  -- 缓冲写地址
+  signal buf_wr_ptr   : integer range 0 to 255;  -- 缓冲写指针（内部）
   signal byte_count   : integer range 0 to 255;  -- 当前阶段已接收字节计数
   signal exp_len      : integer range 0 to 255;  -- 期望的载荷长度（来自 LEN 字段）
   signal escape_flag  : std_logic;               -- 转义标志（收到 0x7D 后置位）
@@ -119,6 +119,11 @@ architecture rtl of fiber_frame_rx is
   signal crc_ok       : std_logic;               -- CRC 校验通过
   signal err_cnt      : unsigned(15 downto 0);   -- CRC 错误计数器
   signal rx_lk_d1     : std_logic;               -- rx_lk 延迟（边沿检测）
+
+  -- 内部写通道（状态机→缓冲，避免多驱动）
+  signal rx_wr_en     : std_logic;
+  signal rx_wr_data   : std_logic_vector(7 downto 0);
+  signal rx_wr_addr   : integer range 0 to 255;
 
   -- 接收阶段字节计数目标
   signal hdr_target   : integer range 0 to 5;    -- HEADER 阶段目标=5
@@ -131,10 +136,11 @@ begin
   -- 主接收状态机
   --===========================================================================
   p_rx_fsm : process(clk, rst)
+    variable eff_byte : std_logic_vector(7 downto 0);
   begin
     if rst = '0' then
       state           <= ST_IDLE;
-      buf_wr_addr     <= 0;
+      buf_wr_ptr      <= 0;
       byte_count      <= 0;
       exp_len         <= 0;
       escape_flag     <= '0';
@@ -151,16 +157,11 @@ begin
       frame_valid     <= '0';
       frame_err       <= '0';
       err_code        <= (others => '0');
-      -- 初始化帧缓冲
-      for i in 0 to 255 loop
-        frame_buf(i)  <= (others => '0');
-      end loop;
 
     elsif rising_edge(clk) then
       -- 默认值
-      frame_valid <= '0';
-      frame_err   <= '0';
       rx_lk_d1    <= rx_lk;
+      rx_wr_en    <= '0';
 
       case state is
 
@@ -168,16 +169,22 @@ begin
         -- ST_IDLE: 等待 SOF (0x7E)
         --=================================================================
         when ST_IDLE =>
-          buf_wr_addr <= 0;
+          buf_wr_ptr  <= 0;
           byte_count  <= 0;
           exp_len     <= 0;
           escape_flag <= '0';
           crc_calc    <= x"FFFF";  -- CRC 初始值
           crc_ok      <= '0';
           err_code    <= (others => '0');
+          -- frame_valid/frame_err 保持上一个值，在新帧开始时不立即清零
 
           if rx_lk = '1' and rx_lk_d1 = '0' then
+            report "DBG: lk edge in IDLE, rx_byte=" & integer'image(to_integer(unsigned(rx_byte)));
             if rx_byte = x"7E" then
+              report "DBG: SOF detected -> HEADER";
+              -- 检测到新帧开始，清除上一帧的标志
+              frame_valid <= '0';
+              frame_err   <= '0';
               state <= ST_HEADER;
               hdr_target <= 5;
             end if;
@@ -188,41 +195,65 @@ begin
         --=================================================================
         when ST_HEADER =>
           if rx_lk = '1' and rx_lk_d1 = '0' then
+            report "DBG HDR: byte=" & integer'image(to_integer(unsigned(rx_byte))) & " cnt=" & integer'image(byte_count);
             -- 提前 EOF？（帧太短）
             if rx_byte = x"7E" then
+              report "DBG HDR: premature EOF";
               state    <= ST_ERROR;
-              err_code <= "001";  -- 帧太短
+              err_code <= "001";
             -- 转义字节
             elsif rx_byte = x"7D" then
-              escape_flag <= '1';
+              if escape_flag = '1' then
+                -- 连续转义字节：无效序列
+                state    <= ST_ERROR;
+                err_code <= "100";
+              else
+                escape_flag <= '1';
+              end if;
             else
-              -- 处理字节
-              frame_buf(buf_wr_addr) <= rx_byte;
-              crc_calc <= crc16_update(crc_calc, rx_byte);
-              buf_wr_addr <= buf_wr_addr + 1;
-              byte_count  <= byte_count + 1;
-
-              -- 收到 LEN 后确定载荷长度
-              if byte_count = 4 then
-                exp_len <= to_integer(unsigned(rx_byte));
-                -- 检查有效载荷长度
-                if to_integer(unsigned(rx_byte)) > 240 then
+              -- 去填充 → 计算有效字节
+              if escape_flag = '1' then
+                if rx_byte = x"5E" then
+                  eff_byte := x"7E";
+                elsif rx_byte = x"5D" then
+                  eff_byte := x"7D";
+                else
                   state    <= ST_ERROR;
-                  err_code <= "010";  -- 载荷超长
+                  err_code <= "100";  -- 无效转义序列
+                  eff_byte := x"00";
                 end if;
+              else
+                eff_byte := rx_byte;
               end if;
 
-              -- HEADER 收完
-              if byte_count = 4 then -- 即将收到第5字节(LEN)后byte_count=5
-                -- 检查 LEN 有效 → 进入 PAYLOAD
-                if to_integer(unsigned(rx_byte)) <= 240 then
+              -- 写缓冲并更新 CRC
+              rx_wr_data <= eff_byte;
+              rx_wr_addr <= buf_wr_ptr;
+              rx_wr_en   <= '1';
+              crc_calc    <= crc16_update(crc_calc, eff_byte);
+              buf_wr_ptr  <= buf_wr_ptr + 1;
+              byte_count  <= byte_count + 1;
+              escape_flag <= '0';
+
+              -- 收到 LEN 后确定载荷长度（byte_count 刚递增，LEN 是第5字节=索引4）
+              if byte_count = 4 then
+                exp_len <= to_integer(unsigned(eff_byte));
+                report "DBG HDR: LEN byte, val=" & integer'image(to_integer(unsigned(eff_byte)));
+                if to_integer(unsigned(eff_byte)) > 240 then
+                  state    <= ST_ERROR;
+                  err_code <= "010";
+                elsif to_integer(unsigned(eff_byte)) = 0 then
+                  report "DBG HDR: LEN=0 -> ST_CRC";
+                  state      <= ST_CRC;
+                  byte_count <= 0;
+                  crc_target <= 2;
+                else
+                  report "DBG HDR: LEN>0 -> ST_PAYLOAD";
                   state      <= ST_PAYLOAD;
                   byte_count <= 0;
-                  payload_target <= to_integer(unsigned(rx_byte));
+                  payload_target <= to_integer(unsigned(eff_byte));
                 end if;
               end if;
-
-              escape_flag <= '0';
             end if;
           end if;
 
@@ -243,26 +274,38 @@ begin
                 err_code <= "011";  -- 载荷不足就收到 EOF
               end if;
             elsif rx_byte = x"7D" then
-              escape_flag <= '1';
+              if escape_flag = '1' then
+                -- 连续转义字节：无效序列
+                state    <= ST_ERROR;
+                err_code <= "100";
+              else
+                escape_flag <= '1';
+              end if;
             else
               -- 去填充处理
               if escape_flag = '1' then
                 if rx_byte = x"5E" then
-                  frame_buf(buf_wr_addr) <= x"7E";
+                  rx_wr_data <= x"7E";
+                  rx_wr_addr <= buf_wr_ptr;
+                  rx_wr_en   <= '1';
                   crc_calc <= crc16_update(crc_calc, x"7E");
                 elsif rx_byte = x"5D" then
-                  frame_buf(buf_wr_addr) <= x"7D";
+                  rx_wr_data <= x"7D";
+                  rx_wr_addr <= buf_wr_ptr;
+                  rx_wr_en   <= '1';
                   crc_calc <= crc16_update(crc_calc, x"7D");
                 else
                   state    <= ST_ERROR;
                   err_code <= "100";  -- 无效转义序列
                 end if;
               else
-                frame_buf(buf_wr_addr) <= rx_byte;
+                rx_wr_data <= rx_byte;
+                rx_wr_addr <= buf_wr_ptr;
+                rx_wr_en   <= '1';
                 crc_calc <= crc16_update(crc_calc, rx_byte);
               end if;
 
-              buf_wr_addr <= buf_wr_addr + 1;
+              buf_wr_ptr <= buf_wr_ptr + 1;
               byte_count  <= byte_count + 1;
               escape_flag <= '0';
 
@@ -281,13 +324,21 @@ begin
         --=================================================================
         when ST_CRC =>
           if rx_lk = '1' and rx_lk_d1 = '0' then
+            report "DBG CRC: byte=" & integer'image(to_integer(unsigned(rx_byte))) & " cnt=" & integer'image(byte_count);
             if rx_byte = x"7E" then
+              report "DBG CRC: premature EOF!";
               state    <= ST_ERROR;
-              err_code <= "001";  -- CRC 不足
+              err_code <= "001";
             elsif rx_byte = x"7D" then
-              escape_flag <= '1';
+              if escape_flag = '1' then
+                -- 连续转义字节：无效序列
+                state    <= ST_ERROR;
+                err_code <= "100";
+              else
+                escape_flag <= '1';
+              end if;
             else
-              -- 去填充（CRC 也可能被填充）
+              -- 存储 CRC 字节（先去填充）
               if escape_flag = '1' then
                 if rx_byte = x"5E" then
                   crc_received(7 + byte_count*8 downto byte_count*8) <= x"7E";
@@ -295,17 +346,16 @@ begin
                   crc_received(7 + byte_count*8 downto byte_count*8) <= x"7D";
                 else
                   state    <= ST_ERROR;
-                  err_code <= "100";
+                  err_code <= "100";  -- 无效转义序列
                 end if;
               else
                 crc_received(7 + byte_count*8 downto byte_count*8) <= rx_byte;
               end if;
-
               byte_count  <= byte_count + 1;
               escape_flag <= '0';
 
-              -- CRC 收完（2字节），等待 EOF
               if byte_count = 1 then
+                report "DBG CRC: both bytes received -> WAIT_EOF";
                 state <= ST_WAIT_EOF;
               end if;
             end if;
@@ -316,25 +366,56 @@ begin
         --=================================================================
         when ST_WAIT_EOF =>
           if rx_lk = '1' and rx_lk_d1 = '0' then
+            report "DBG WAIT_EOF: byte=" & integer'image(to_integer(unsigned(rx_byte)));
             if rx_byte = x"7E" then
-              -- 校验 CRC
+              report "DBG WAIT_EOF: EOF -> check CRC";
               if crc_calc = crc_received then
+                report "DBG WAIT_EOF: CRC OK -> DONE";
                 crc_ok <= '1';
                 state  <= ST_DONE;
               else
-                err_cnt <= err_cnt + 1;
-                state   <= ST_ERROR;
-                err_code <= "101";  -- CRC 错误
+                report "DBG WAIT_EOF: CRC mismatch -> ERROR"
+                  & " calc=" & integer'image(to_integer(unsigned(crc_calc(15 downto 8))))
+                  & integer'image(to_integer(unsigned(crc_calc(7 downto 0))))
+                  & " recv=" & integer'image(to_integer(unsigned(crc_received(15 downto 8))))
+                  & integer'image(to_integer(unsigned(crc_received(7 downto 0))));
+                crc_ok   <= '0';
+                err_cnt  <= err_cnt + 1;
+                state    <= ST_ERROR;
+                err_code <= "101";
               end if;
             elsif rx_byte = x"7D" then
-              -- EOF 前不应再有转义，但仍处理：忽略转义等待真正的 EOF
-              escape_flag <= '1';
-            else
-              -- 收到非 0x7E 非 0x7D 的字节（转义后也不是 0x7E）
               if escape_flag = '1' then
+                -- 连续转义字节：无效序列
+                state    <= ST_ERROR;
+                err_code <= "100";
+              else
+                escape_flag <= '1';
+              end if;
+            else
+              -- 收到非 0x7E 非 0x7D 的字节
+              if escape_flag = '1' then
+                -- 转义后也不是 0x7E（EOF），可能是噪声
+                if rx_byte = x"5E" then
+                  -- 0x7D 0x5E → 0x7E → 等同于 EOF
+                  report "DBG WAIT_EOF: escaped EOF -> check CRC";
+                  if crc_calc = crc_received then
+                    crc_ok <= '1';
+                    state  <= ST_DONE;
+                  else
+                    crc_ok   <= '0';
+                    err_cnt  <= err_cnt + 1;
+                    state    <= ST_ERROR;
+                    err_code <= "101";
+                  end if;
+                else
+                  -- 无效转义序列
+                  state    <= ST_ERROR;
+                  err_code <= "100";
+                end if;
                 escape_flag <= '0';
               end if;
-              -- 不报错，继续等待 EOF
+              -- 非转义模式下的普通字节：继续等待 EOF（不报错）
             end if;
           end if;
 
@@ -371,16 +452,19 @@ begin
   buf_rd_data <= frame_buf(to_integer(unsigned(buf_rd_addr)));
 
   --===========================================================================
-  -- 外部写端口（cmd_processor 修改缓冲用，如构建响应/追加数据）
+  -- 帧缓冲统一写进程（单点写入，避免多驱动）
+  -- 优先级：外部写（cmd_processor）> 内部写（状态机接收）
   --===========================================================================
-  p_ext_write : process(clk)
+  p_buf_write : process(clk)
   begin
     if rising_edge(clk) then
       if buf_wr_en = '1' then
         frame_buf(to_integer(unsigned(buf_wr_addr))) <= buf_wr_data;
+      elsif rx_wr_en = '1' then
+        frame_buf(rx_wr_addr) <= rx_wr_data;
       end if;
     end if;
-  end process p_ext_write;
+  end process p_buf_write;
 
   --===========================================================================
   -- 输出计数器

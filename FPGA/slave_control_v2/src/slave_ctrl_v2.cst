@@ -64,12 +64,6 @@ IO_LOC "status_led" 72;
 IO_PORT "status_led" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
 
 //==================================================================
-// 复位 (pin 78 左边)
-//==================================================================
-IO_LOC "rst" 78;
-IO_PORT "rst" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-
-//==================================================================
 // 8位地址拨码 (pins 79-86 左边连续) → DIP开关
 //==================================================================
 IO_LOC "address[0]" 79;
@@ -78,13 +72,19 @@ IO_LOC "address[1]" 80;
 IO_PORT "address[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "address[2]" 81;
 IO_PORT "address[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "address[3]" 82;
+IO_LOC "address[3]" 83;
 IO_PORT "address[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "address[4]" 83;
+IO_LOC "address[4]" 84;
 IO_PORT "address[4]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "address[5]" 84;
+IO_LOC "address[5]" 85;
 IO_PORT "address[5]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "address[6]" 85;
+IO_LOC "address[6]" 86;
 IO_PORT "address[6]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "address[7]" 86;
+IO_LOC "address[7]" 87;
 IO_PORT "address[7]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//==================================================================
+// 复位 (pin 73 左边, LED区域旁)
+//==================================================================
+IO_LOC "rst" 73;
+IO_PORT "rst" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
