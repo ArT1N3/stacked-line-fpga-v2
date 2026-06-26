@@ -1,0 +1,72 @@
+//Copyright (C)2014-2023 Gowin Semiconductor Corporation.
+//All rights reserved.
+//File Title: Physical Constraints file
+//GOWIN Version: V2.0
+//Part Number: GW1N-UV9QN88C6/I5
+//Device: GW1N-9C
+//Description: V2.0 分控板 — 光纤环网从机节点
+//             端口名尽量与V1.0保持一致，引脚本沿用V1.0分配
+
+//=== 系统 ===
+IO_LOC "clk" 11;
+IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "rst" 82;
+IO_PORT "rst" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//=== 光纤接口（复用V1.0 RXD/TXD引脚位置） ===
+IO_LOC "RXD" 26;
+IO_PORT "RXD" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "TXD" 25;
+IO_PORT "TXD" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+
+//=== 地址（8位，低4位沿用V1.0，高4位用空闲引脚） ===
+IO_LOC "address[0]" 83;
+IO_PORT "address[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[1]" 84;
+IO_PORT "address[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[2]" 85;
+IO_PORT "address[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[3]" 86;
+IO_PORT "address[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[4]" 16;
+IO_PORT "address[4]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[5]" 20;
+IO_PORT "address[5]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[6]" 30;
+IO_PORT "address[6]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "address[7]" 34;
+IO_PORT "address[7]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//=== 短路检测输入（4通道，沿用V1.0 short_in[1:4]位置） ===
+IO_LOC "short_in[0]" 15;
+IO_PORT "short_in[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "short_in[1]" 19;
+IO_PORT "short_in[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "short_in[2]" 29;
+IO_PORT "short_in[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "short_in[3]" 33;
+IO_PORT "short_in[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//=== 继电器控制输出（4通道，沿用V1.0 en_work[1:4]位置） ===
+IO_LOC "relay_out[0]" 13;
+IO_PORT "relay_out[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "relay_out[1]" 17;
+IO_PORT "relay_out[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "relay_out[2]" 27;
+IO_PORT "relay_out[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "relay_out[3]" 31;
+IO_PORT "relay_out[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+
+//=== 故障指示灯（4通道，沿用V1.0 red_led[1:4]位置） ===
+IO_LOC "fault_led[0]" 77;
+IO_PORT "fault_led[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "fault_led[1]" 76;
+IO_PORT "fault_led[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "fault_led[2]" 75;
+IO_PORT "fault_led[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "fault_led[3]" 74;
+IO_PORT "fault_led[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+
+//=== 状态指示灯（沿用V1.0 red_led[10]位置） ===
+IO_LOC "status_led" 68;
+IO_PORT "status_led" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;

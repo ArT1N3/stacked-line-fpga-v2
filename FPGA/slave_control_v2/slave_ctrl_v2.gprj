@@ -1,0 +1,25 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1N-9C" pn="GW1N-UV9QN88C6/I5">gw1n9c-011</Device>
+    <FileList>
+        <File path="src/mac_16.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/mac_32.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/err_dff.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/com_rx.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/com_tx.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/rxd_clk.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/en_err_chk.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/fiber_frame_rx.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/fiber_frame_tx.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/cmd_processor.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/ring_forward.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/fault_detector_v2.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/slave_ctrl_v2.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/top.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/slave_ctrl_v2.cst" type="file.cst" enable="1"/>
+        <File path="src/slave_ctrl_v2.sdc" type="file.sdc" enable="1"/>
+    </FileList>
+</Project>
