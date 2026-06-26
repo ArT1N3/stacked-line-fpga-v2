@@ -1,0 +1,1088 @@
+Analysis & Synthesis report for MAST_CTR
+Tue Jan 14 15:45:31 2020
+Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Source Files Read
+  6. Analysis & Synthesis Resource Usage Summary
+  7. Analysis & Synthesis Resource Utilization by Entity
+  8. Registers Removed During Synthesis
+  9. Removed Registers Triggering Further Register Optimizations
+ 10. General Register Statistics
+ 11. Inverted Register Statistics
+ 12. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 13. Parameter Settings for User Entity Instance: Const_8:inst169
+ 14. Parameter Settings for User Entity Instance: LM75BD:inst73|Const_3:b2v_inst15
+ 15. Analysis & Synthesis Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2010 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++------------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                       ;
++------------------------------------+-----------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Tue Jan 14 15:45:31 2020         ;
+; Quartus II Version                 ; 9.1 Build 350 03/24/2010 SP 2 SJ Full Version ;
+; Revision Name                      ; MAST_CTR                                      ;
+; Top-level Entity Name              ; Top                                           ;
+; Family                             ; Cyclone IV E                                  ;
+; Total logic elements               ; 6,971                                         ;
+;     Total combinational functions  ; 5,363                                         ;
+;     Dedicated logic registers      ; 3,587                                         ;
+; Total registers                    ; 3587                                          ;
+; Total pins                         ; 47                                            ;
+; Total virtual pins                 ; 0                                             ;
+; Total memory bits                  ; 0                                             ;
+; Embedded Multiplier 9-bit elements ; 0                                             ;
+; Total PLLs                         ; 0                                             ;
++------------------------------------+-----------------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                                        ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                                     ; Setting            ; Default Value      ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                                     ; EP4CE22F17C6       ;                    ;
+; Top-level entity name                                                      ; Top                ; MAST_CTR           ;
+; Family name                                                                ; Cyclone IV E       ; Stratix II         ;
+; Type of Retiming Performed During Resynthesis                              ; Full               ;                    ;
+; Resynthesis Optimization Effort                                            ; Normal             ;                    ;
+; Physical Synthesis Level for Resynthesis                                   ; Normal             ;                    ;
+; Use Generated Physical Constraints File                                    ; On                 ;                    ;
+; Use smart compilation                                                      ; Off                ; Off                ;
+; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation ; On                 ; On                 ;
+; Enable compact report table                                                ; Off                ; Off                ;
+; Restructure Multiplexers                                                   ; Auto               ; Auto               ;
+; Create Debugging Nodes for IP Cores                                        ; Off                ; Off                ;
+; Preserve fewer node names                                                  ; On                 ; On                 ;
+; Disable OpenCore Plus hardware evaluation                                  ; Off                ; Off                ;
+; Verilog Version                                                            ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                               ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                                   ; Auto               ; Auto               ;
+; Safe State Machine                                                         ; Off                ; Off                ;
+; Extract Verilog State Machines                                             ; On                 ; On                 ;
+; Extract VHDL State Machines                                                ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                          ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                                 ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                             ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                                    ; On                 ; On                 ;
+; Parallel Synthesis                                                         ; On                 ; On                 ;
+; DSP Block Balancing                                                        ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                                         ; On                 ; On                 ;
+; Power-Up Don't Care                                                        ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                               ; Off                ; Off                ;
+; Remove Duplicate Registers                                                 ; On                 ; On                 ;
+; Ignore CARRY Buffers                                                       ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                                     ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                                      ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                                  ; Off                ; Off                ;
+; Ignore LCELL Buffers                                                       ; Off                ; Off                ;
+; Ignore SOFT Buffers                                                        ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                             ; Off                ; Off                ;
+; Optimization Technique                                                     ; Balanced           ; Balanced           ;
+; Carry Chain Length                                                         ; 70                 ; 70                 ;
+; Auto Carry Chains                                                          ; On                 ; On                 ;
+; Auto Open-Drain Pins                                                       ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                                      ; Off                ; Off                ;
+; Auto ROM Replacement                                                       ; On                 ; On                 ;
+; Auto RAM Replacement                                                       ; On                 ; On                 ;
+; Auto DSP Block Replacement                                                 ; On                 ; On                 ;
+; Auto Shift Register Replacement                                            ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                              ; On                 ; On                 ;
+; Strict RAM Replacement                                                     ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                          ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                                     ; Off                ; Off                ;
+; Auto RAM Block Balancing                                                   ; On                 ; On                 ;
+; Auto RAM to Logic Cell Conversion                                          ; Off                ; Off                ;
+; Auto Resource Sharing                                                      ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                              ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing                        ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                          ; Off                ; Off                ;
+; Timing-Driven Synthesis                                                    ; On                 ; On                 ;
+; Show Parameter Settings Tables in Synthesis Report                         ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                                         ; Off                ; Off                ;
+; Synchronization Register Chain Length                                      ; 2                  ; 2                  ;
+; PowerPlay Power Optimization                                               ; Normal compilation ; Normal compilation ;
+; HDL message level                                                          ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                            ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report                   ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report                  ; 100                ; 100                ;
+; Clock MUX Protection                                                       ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                                ; Off                ; Off                ;
+; Block Design Naming                                                        ; Auto               ; Auto               ;
+; SDC constraint protection                                                  ; Off                ; Off                ;
+; Synthesis Effort                                                           ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal               ; On                 ; On                 ;
+; Analysis & Synthesis Message Level                                         ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                                ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                                     ; On                 ; On                 ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 4           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 4           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     1 processor            ; 100.0%      ;
+;     2-4 processors         ; < 0.1%      ;
++----------------------------+-------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                      ;
++----------------------------------+-----------------+------------------------------------+-----------------------------------------------------------------------------------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type                          ; File Name with Absolute Path                                                      ;
++----------------------------------+-----------------+------------------------------------+-----------------------------------------------------------------------------------+
+; Top.bdf                          ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Top.bdf                    ;
+; Const_3.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Const_3.vhd                ;
+; AD_MCP3202.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/AD_MCP3202.vhd             ;
+; clk_div_500.vhd                  ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/clk_div_500.vhd            ;
+; LEVEL_EDG.vhd                    ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/LEVEL_EDG.vhd              ;
+; FPGA_TO_PC.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/FPGA_TO_PC.vhd             ;
+; delay_1.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/delay_1.vhd                ;
+; countor_T_over.vhd               ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/countor_T_over.vhd         ;
+; comp_clr.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/comp_clr.vhd               ;
+; clk_Gen.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/clk_Gen.vhd                ;
+; countor_addr_RX_cnt.vhd          ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/countor_addr_RX_cnt.vhd    ;
+; dat_store_RX.vhd                 ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/dat_store_RX.vhd           ;
+; dat_CONFM_RX.vhd                 ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/dat_CONFM_RX.vhd           ;
+; RCV_DEAL.bdf                     ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/RCV_DEAL.bdf               ;
+; DIV_500.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/DIV_500.vhd                ;
+; Com_tx.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_tx.vhd                 ;
+; Com_rx.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_rx.vhd                 ;
+; Com_RXD.bdf                      ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_RXD.bdf                ;
+; CMD_DEAL_M.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CMD_DEAL_M.vhd             ;
+; CMD_trig.bdf                     ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CMD_trig.bdf               ;
+; CMD_AUX_DEAL.bdf                 ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CMD_AUX_DEAL.bdf           ;
+; Lock_1.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Lock_1.vhd                 ;
+; Dat_SEL.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Dat_SEL.vhd                ;
+; RLY_CTR_8.vhd                    ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/RLY_CTR_8.vhd              ;
+; Mast_TO_Slave.vhd                ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Mast_TO_Slave.vhd          ;
+; EN_TX_SEL.vhd                    ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/EN_TX_SEL.vhd              ;
+; Mast_TO_Charger.vhd              ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Mast_TO_Charger.vhd        ;
+; Auto_ask.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Auto_ask.vhd               ;
+; Com_rx_charger.bdf               ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_rx_charger.bdf         ;
+; countor_addr_RX_cnt_CH.vhd       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/countor_addr_RX_cnt_CH.vhd ;
+; RCV_DEAL_CH.bdf                  ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/RCV_DEAL_CH.bdf            ;
+; dat_store_RX_CH.vhd              ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/dat_store_RX_CH.vhd        ;
+; dat_CONFM_RX_CH.vhd              ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/dat_CONFM_RX_CH.vhd        ;
+; MULTI_SIGNAL.vhd                 ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/MULTI_SIGNAL.vhd           ;
+; Pulse_CHARGE_m.vhd               ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Pulse_CHARGE_m.vhd         ;
+; Pulse_generate.vhd               ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Pulse_generate.vhd         ;
+; Pulse_count.vhd                  ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Pulse_count.vhd            ;
+; E_trig_L.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/E_trig_L.vhd               ;
+; SET_U_LOCK.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/SET_U_LOCK.vhd             ;
+; Const_8.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Const_8.vhd                ;
+; Rx_Module.vhd                    ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Rx_Module.vhd              ;
+; CHK_TX.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CHK_TX.vhd                 ;
+; CHK_TX2.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CHK_TX2.vhd                ;
+; CHK_trig.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CHK_trig.vhd               ;
+; Trig_OUT.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Trig_OUT.vhd               ;
+; SYN_OUT_CTR.bdf                  ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/SYN_OUT_CTR.bdf            ;
+; WK_st_delay.vhd                  ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/WK_st_delay.vhd            ;
+; Bit_Byte.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Bit_Byte.vhd               ;
+; Lock_EN.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Lock_EN.vhd                ;
+; ERR_CHK.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/ERR_CHK.vhd                ;
+; Bit_2.vhd                        ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Bit_2.vhd                  ;
+; Mac_16.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Mac_16.vhd                 ;
+; RXD_STOP.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/RXD_STOP.vhd               ;
+; CHK_TX3.vhd                      ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/CHK_TX3.vhd                ;
+; Com_dly_clr.vhd                  ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_dly_clr.vhd            ;
+; Com_dly_RST.vhd                  ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_dly_RST.vhd            ;
+; trig_AUX.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/trig_AUX.vhd               ;
+; Byte_Word.vhd                    ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Byte_Word.vhd              ;
+; Single_M.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Single_M.vhd               ;
+; M_OK_CHK.vhd                     ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/M_OK_CHK.vhd               ;
+; WK_ON_show.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/WK_ON_show.vhd             ;
+; Com_dly_EN.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Com_dly_EN.vhd             ;
+; Lock_CHG_DAT_SEL.vhd             ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Lock_CHG_DAT_SEL.vhd       ;
+; AT_DAT_STORE.bdf                 ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/AT_DAT_STORE.bdf           ;
+; DLY_RD_ROM.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/DLY_RD_ROM.vhd             ;
+; countor_clk_FLASH.vhd            ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/countor_clk_FLASH.vhd      ;
+; countor_addr22.vhd               ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/countor_addr22.vhd         ;
+; DLY_RW_SEL.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/DLY_RW_SEL.vhd             ;
+; AT24C02.bdf                      ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/AT24C02.bdf                ;
+; Flash_I2C_core.vhd               ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Flash_I2C_core.vhd         ;
+; dat_pick16.vhd                   ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/dat_pick16.vhd             ;
+; READ_FLASH.bdf                   ; yes             ; User Block Diagram/Schematic File  ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/READ_FLASH.bdf             ;
+; Lock_8.vhd                       ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Lock_8.vhd                 ;
+; Auto_addr_dly.vhd                ; yes             ; User VHDL File                     ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/Auto_addr_dly.vhd          ;
+; rst_g.vhd                        ; yes             ; Auto-Found VHDL File               ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/rst_g.vhd                  ;
+; lm75bd.vhd                       ; yes             ; Auto-Found VHDL File               ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/lm75bd.vhd                 ;
+; trig_rvs.vhd                     ; yes             ; Auto-Found VHDL File               ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/trig_rvs.vhd               ;
+; lm75b_drv1.vhd                   ; yes             ; Auto-Found VHDL File               ; D:/Gowin_FPGA/MST_450kV/MST_TEST_450kV_V4.31/GoWin/src/lm75b_drv1.vhd             ;
++----------------------------------+-----------------+------------------------------------+-----------------------------------------------------------------------------------+
+
+
++--------------------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary                        ;
++---------------------------------------------+----------------------+
+; Resource                                    ; Usage                ;
++---------------------------------------------+----------------------+
+; Estimated Total logic elements              ; 6,971                ;
+;                                             ;                      ;
+; Total combinational functions               ; 5363                 ;
+; Logic element usage by number of LUT inputs ;                      ;
+;     -- 4 input functions                    ; 2479                 ;
+;     -- 3 input functions                    ; 1590                 ;
+;     -- <=2 input functions                  ; 1294                 ;
+;                                             ;                      ;
+; Logic elements by mode                      ;                      ;
+;     -- normal mode                          ; 3643                 ;
+;     -- arithmetic mode                      ; 1720                 ;
+;                                             ;                      ;
+; Total registers                             ; 3587                 ;
+;     -- Dedicated logic registers            ; 3587                 ;
+;     -- I/O registers                        ; 0                    ;
+;                                             ;                      ;
+; I/O pins                                    ; 47                   ;
+; Maximum fan-out node                        ; EXT_IO3_COM_R1~input ;
+; Maximum fan-out                             ; 360                  ;
+; Total fan-out                               ; 26900                ;
+; Average fan-out                             ; 2.97                 ;
++---------------------------------------------+----------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                    ;
++---------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------+--------------+
+; Compilation Hierarchy Node            ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                 ; Library Name ;
++---------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------+--------------+
+; |Top                                  ; 5363 (46)         ; 3587 (0)     ; 0           ; 0            ; 0       ; 0         ; 47   ; 0            ; |Top                                                                ; work         ;
+;    |AD_MCP3202:inst|                  ; 165 (165)         ; 74 (74)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AD_MCP3202:inst                                                ; work         ;
+;    |AT_DAT_STORE:inst170|             ; 138 (5)           ; 148 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170                                           ;              ;
+;       |AT24C02:inst6|                 ; 84 (0)            ; 50 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|AT24C02:inst6                             ; work         ;
+;          |Flash_I2C_core:inst21|      ; 84 (84)           ; 50 (50)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21       ; work         ;
+;       |DLY_RD_ROM:inst2|              ; 15 (15)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|DLY_RD_ROM:inst2                          ; work         ;
+;       |DLY_RW_SEL:inst13|             ; 12 (12)           ; 10 (10)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|DLY_RW_SEL:inst13                         ; work         ;
+;       |READ_FLASH:inst10|             ; 0 (0)             ; 40 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10                         ; work         ;
+;          |Lock_8:inst2|               ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst2            ; work         ;
+;          |Lock_8:inst3|               ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst3            ; work         ;
+;          |Lock_8:inst4|               ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst4            ; work         ;
+;          |Lock_8:inst8|               ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst8            ; work         ;
+;          |Lock_8:inst|                ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst             ; work         ;
+;       |countor_addr22:inst9|          ; 3 (3)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|countor_addr22:inst9                      ; work         ;
+;       |countor_clk_FLASH:inst1|       ; 5 (5)             ; 5 (5)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|countor_clk_FLASH:inst1                   ; work         ;
+;       |dat_pick16:inst7|              ; 14 (14)           ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|dat_pick16:inst7                          ; work         ;
+;       |delay_1:inst11|                ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|delay_1:inst11                            ; work         ;
+;       |delay_1:inst3|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|delay_1:inst3                             ; work         ;
+;       |delay_1:inst5|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|AT_DAT_STORE:inst170|delay_1:inst5                             ; work         ;
+;    |Auto_ask:inst39|                  ; 15 (15)           ; 10 (10)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Auto_ask:inst39                                                ; work         ;
+;    |CHK_TX2:inst69|                   ; 16 (16)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CHK_TX2:inst69                                                 ; work         ;
+;    |CHK_TX3:inst118|                  ; 20 (20)           ; 12 (12)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CHK_TX3:inst118                                                ; work         ;
+;    |CHK_TX:inst67|                    ; 15 (15)           ; 10 (10)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CHK_TX:inst67                                                  ; work         ;
+;    |CHK_trig:inst80|                  ; 21 (21)           ; 13 (13)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CHK_trig:inst80                                                ; work         ;
+;    |CMD_AUX_DEAL:inst28|              ; 17 (0)            ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CMD_AUX_DEAL:inst28                                            ; work         ;
+;       |CMD_DEAL_M:inst22|             ; 5 (5)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CMD_AUX_DEAL:inst28|CMD_DEAL_M:inst22                          ; work         ;
+;       |CMD_trig:inst21|               ; 12 (12)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|CMD_AUX_DEAL:inst28|CMD_trig:inst21                            ; work         ;
+;    |Com_RXD:inst32|                   ; 271 (16)          ; 402 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32                                                 ; work         ;
+;       |Com_rx:inst31|                 ; 24 (24)           ; 27 (27)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|Com_rx:inst31                                   ; work         ;
+;       |RCV_DEAL:inst18|               ; 175 (0)           ; 346 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|RCV_DEAL:inst18                                 ; work         ;
+;          |dat_CONFM_RX:inst|          ; 175 (175)         ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|RCV_DEAL:inst18|dat_CONFM_RX:inst               ; work         ;
+;          |dat_store_RX:inst1|         ; 0 (0)             ; 346 (346)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|RCV_DEAL:inst18|dat_store_RX:inst1              ; work         ;
+;       |comp_clr:inst17|               ; 38 (38)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|comp_clr:inst17                                 ; work         ;
+;       |countor_T_over:inst10|         ; 12 (12)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|countor_T_over:inst10                           ; work         ;
+;       |countor_addr_RX_cnt:inst16|    ; 6 (6)             ; 6 (6)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|countor_addr_RX_cnt:inst16                      ; work         ;
+;       |delay_1:inst5|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|delay_1:inst5                                   ; work         ;
+;       |delay_1:inst6|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|delay_1:inst6                                   ; work         ;
+;       |delay_1:inst9|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_RXD:inst32|delay_1:inst9                                   ; work         ;
+;    |Com_dly_EN:inst156|               ; 16 (16)           ; 12 (12)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_dly_EN:inst156                                             ; work         ;
+;    |Com_dly_RST:inst49|               ; 16 (16)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_dly_RST:inst49                                             ; work         ;
+;    |Com_dly_clr:inst35|               ; 16 (16)           ; 12 (12)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_dly_clr:inst35                                             ; work         ;
+;    |Com_rx_charger:inst44|            ; 193 (13)          ; 344 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44                                          ; work         ;
+;       |Com_rx:inst31|                 ; 24 (24)           ; 27 (27)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|Com_rx:inst31                            ; work         ;
+;       |RCV_DEAL_CH:inst42|            ; 138 (0)           ; 288 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|RCV_DEAL_CH:inst42                       ; work         ;
+;          |dat_CONFM_RX_CH:inst3|      ; 113 (113)         ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|RCV_DEAL_CH:inst42|dat_CONFM_RX_CH:inst3 ; work         ;
+;          |dat_store_RX_CH:inst2|      ; 25 (25)           ; 288 (288)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|RCV_DEAL_CH:inst42|dat_store_RX_CH:inst2 ; work         ;
+;       |countor_T_over:inst10|         ; 12 (12)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|countor_T_over:inst10                    ; work         ;
+;       |countor_addr_RX_cnt_CH:inst11| ; 6 (6)             ; 6 (6)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|countor_addr_RX_cnt_CH:inst11            ; work         ;
+;       |delay_1:inst5|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|delay_1:inst5                            ; work         ;
+;       |delay_1:inst6|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|delay_1:inst6                            ; work         ;
+;       |delay_1:inst9|                 ; 0 (0)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_rx_charger:inst44|delay_1:inst9                            ; work         ;
+;    |Com_tx:inst27|                    ; 15 (15)           ; 18 (18)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_tx:inst27                                                  ; work         ;
+;    |Com_tx:inst29|                    ; 14 (14)           ; 17 (17)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_tx:inst29                                                  ; work         ;
+;    |Com_tx:inst31|                    ; 14 (14)           ; 17 (17)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Com_tx:inst31                                                  ; work         ;
+;    |DIV_500:inst10|                   ; 17 (17)           ; 12 (12)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|DIV_500:inst10                                                 ; work         ;
+;    |Dat_SEL:inst2|                    ; 680 (680)         ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Dat_SEL:inst2                                                  ; work         ;
+;    |EN_TX_SEL:inst25|                 ; 4 (4)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|EN_TX_SEL:inst25                                               ; work         ;
+;    |ERR_CHK:inst57|                   ; 240 (240)         ; 240 (240)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|ERR_CHK:inst57                                                 ; work         ;
+;    |E_trig_L:inst64|                  ; 14 (14)           ; 9 (9)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|E_trig_L:inst64                                                ; work         ;
+;    |E_trig_L:inst65|                  ; 14 (14)           ; 9 (9)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|E_trig_L:inst65                                                ; work         ;
+;    |FPGA_TO_PC:inst3|                 ; 397 (397)         ; 172 (172)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|FPGA_TO_PC:inst3                                               ; work         ;
+;    |LEVEL_EDG:inst14|                 ; 1 (1)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|LEVEL_EDG:inst14                                               ; work         ;
+;    |LEVEL_EDG:inst42|                 ; 2 (2)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|LEVEL_EDG:inst42                                               ; work         ;
+;    |LEVEL_EDG:inst58|                 ; 2 (2)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|LEVEL_EDG:inst58                                               ; work         ;
+;    |LEVEL_EDG:inst59|                 ; 1 (1)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|LEVEL_EDG:inst59                                               ; work         ;
+;    |Lock_1:inst103|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst103                                                 ; work         ;
+;    |Lock_1:inst104|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst104                                                 ; work         ;
+;    |Lock_1:inst105|                   ; 2 (2)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst105                                                 ; work         ;
+;    |Lock_1:inst106|                   ; 82 (82)           ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst106                                                 ; work         ;
+;    |Lock_1:inst108|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst108                                                 ; work         ;
+;    |Lock_1:inst114|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst114                                                 ; work         ;
+;    |Lock_1:inst120|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst120                                                 ; work         ;
+;    |Lock_1:inst121|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst121                                                 ; work         ;
+;    |Lock_1:inst122|                   ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst122                                                 ; work         ;
+;    |Lock_1:inst99|                    ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_1:inst99                                                  ; work         ;
+;    |Lock_CHG_DAT_SEL:inst185|         ; 3 (3)             ; 233 (233)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_CHG_DAT_SEL:inst185                                       ; work         ;
+;    |Lock_EN:inst16|                   ; 0 (0)             ; 240 (240)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Lock_EN:inst16                                                 ; work         ;
+;    |MULTI_SIGNAL:inst164|             ; 728 (728)         ; 146 (146)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|MULTI_SIGNAL:inst164                                           ; work         ;
+;    |M_OK_CHK:inst146|                 ; 17 (17)           ; 12 (12)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|M_OK_CHK:inst146                                               ; work         ;
+;    |Mac_16:inst96|                    ; 31 (31)           ; 21 (21)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Mac_16:inst96                                                  ; work         ;
+;    |Mac_16:inst97|                    ; 11 (11)           ; 17 (17)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Mac_16:inst97                                                  ; work         ;
+;    |Mac_16:inst98|                    ; 47 (47)           ; 21 (21)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Mac_16:inst98                                                  ; work         ;
+;    |Mast_TO_Charger:inst26|           ; 95 (95)           ; 48 (48)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Mast_TO_Charger:inst26                                         ; work         ;
+;    |Mast_TO_Slave:inst22|             ; 293 (293)         ; 150 (150)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Mast_TO_Slave:inst22                                           ; work         ;
+;    |Pulse_CHARGE_m:inst8|             ; 69 (69)           ; 33 (33)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Pulse_CHARGE_m:inst8                                           ; work         ;
+;    |Pulse_count:inst63|               ; 16 (16)           ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Pulse_count:inst63                                             ; work         ;
+;    |Pulse_generate:inst53|            ; 124 (124)         ; 79 (79)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Pulse_generate:inst53                                          ; work         ;
+;    |RLY_CTR_8:inst7|                  ; 0 (0)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|RLY_CTR_8:inst7                                                ; work         ;
+;    |RST_G:inst1|                      ; 11 (11)           ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|RST_G:inst1                                                    ; work         ;
+;    |RST_G:inst5|                      ; 11 (11)           ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|RST_G:inst5                                                    ; work         ;
+;    |RXD_STOP:inst116|                 ; 8 (8)             ; 6 (6)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|RXD_STOP:inst116                                               ; work         ;
+;    |Rx_Module:inst47|                 ; 213 (213)         ; 132 (132)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst47                                               ; work         ;
+;    |Rx_Module:inst55|                 ; 213 (213)         ; 132 (132)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst55                                               ; work         ;
+;    |Rx_Module:inst62|                 ; 202 (202)         ; 132 (132)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst62                                               ; work         ;
+;    |Rx_Module:inst68|                 ; 174 (174)         ; 133 (133)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst68                                               ; work         ;
+;    |Rx_Module:inst71|                 ; 195 (195)         ; 132 (132)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst71                                               ; work         ;
+;    |Rx_Module:inst74|                 ; 209 (209)         ; 132 (132)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Rx_Module:inst74                                               ; work         ;
+;    |SET_U_LOCK:inst54|                ; 0 (0)             ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|SET_U_LOCK:inst54                                              ; work         ;
+;    |SYN_OUT_CTR:inst83|               ; 22 (2)            ; 14 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|SYN_OUT_CTR:inst83                                             ; work         ;
+;       |Trig_OUT:inst85|               ; 10 (10)           ; 7 (7)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|SYN_OUT_CTR:inst83|Trig_OUT:inst85                             ; work         ;
+;       |Trig_OUT:inst86|               ; 10 (10)           ; 7 (7)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|SYN_OUT_CTR:inst83|Trig_OUT:inst86                             ; work         ;
+;    |Single_M:inst145|                 ; 29 (29)           ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|Single_M:inst145                                               ; work         ;
+;    |WK_ON_show:inst153|               ; 17 (17)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|WK_ON_show:inst153                                             ; work         ;
+;    |WK_st_delay:inst88|               ; 14 (14)           ; 11 (11)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|WK_st_delay:inst88                                             ; work         ;
+;    |clk_Gen:inst6|                    ; 70 (70)           ; 48 (48)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|clk_Gen:inst6                                                  ; work         ;
+;    |lm75bd:inst73|                    ; 59 (1)            ; 41 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|lm75bd:inst73                                                  ; work         ;
+;       |LM75B_DRV1:b2v_inst3|          ; 41 (41)           ; 27 (27)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|lm75bd:inst73|LM75B_DRV1:b2v_inst3                             ; work         ;
+;       |clk_div_500:b2v_inst|          ; 15 (15)           ; 10 (10)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|lm75bd:inst73|clk_div_500:b2v_inst                             ; work         ;
+;       |trig_rvs:b2v_inst193|          ; 1 (1)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|lm75bd:inst73|trig_rvs:b2v_inst193                             ; work         ;
+;       |trig_rvs:b2v_inst194|          ; 1 (1)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|lm75bd:inst73|trig_rvs:b2v_inst194                             ; work         ;
+;    |trig_AUX:inst52|                  ; 9 (9)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|trig_AUX:inst52                                                ; work         ;
+;    |trig_rvs:inst46|                  ; 1 (1)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |Top|trig_rvs:inst46                                                ; work         ;
++---------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------+--------------+
+Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
++---------------------------------------------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                                                                  ;
++------------------------------------------------------------------------+--------------------------------------------+
+; Register name                                                          ; Reason for Removal                         ;
++------------------------------------------------------------------------+--------------------------------------------+
+; Mast_TO_Slave:inst22|TMP1[1,3,5,7]                                     ; Stuck at GND due to stuck port data_in     ;
+; Mast_TO_Charger:inst26|TMP1[4..7]                                      ; Stuck at GND due to stuck port data_in     ;
+; Lock_CHG_DAT_SEL:inst185|C1_D1[1..7]                                   ; Stuck at GND due to stuck port data_in     ;
+; lm75bd:inst73|LM75B_DRV1:b2v_inst3|ADDR[0..2]                          ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[4]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[3]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[2]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[1]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[0]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[5]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[6]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da4[7]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[0]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[1]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[2]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[3]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[4]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[5]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[6]                           ; Stuck at GND due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|dat_pick16:inst7|da3[7]                           ; Stuck at VCC due to stuck port data_in     ;
+; AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21|address[3..7] ; Stuck at GND due to stuck port data_in     ;
+; lm75bd:inst73|LM75B_DRV1:b2v_inst3|TEMP[0]                             ; Stuck at GND due to stuck port data_in     ;
+; lm75bd:inst73|LM75B_DRV1:b2v_inst3|TEM1[0]                             ; Stuck at GND due to stuck port data_in     ;
+; MULTI_SIGNAL:inst164|M_pls[0]                                          ; Stuck at GND due to stuck port data_in     ;
+; MULTI_SIGNAL:inst164|TMS[0..1]                                         ; Stuck at GND due to stuck port data_in     ;
+; MULTI_SIGNAL:inst164|T_CHG[0]                                          ; Merged with Pulse_CHARGE_m:inst8|T[0]      ;
+; MULTI_SIGNAL:inst164|T_CHG[1]                                          ; Merged with Pulse_CHARGE_m:inst8|T[1]      ;
+; MULTI_SIGNAL:inst164|T_CHG[2]                                          ; Merged with Pulse_CHARGE_m:inst8|T[2]      ;
+; MULTI_SIGNAL:inst164|T_CHG[3]                                          ; Merged with Pulse_CHARGE_m:inst8|T[3]      ;
+; MULTI_SIGNAL:inst164|T_CHG[4]                                          ; Merged with Pulse_CHARGE_m:inst8|T[4]      ;
+; MULTI_SIGNAL:inst164|T_CHG[5]                                          ; Merged with Pulse_CHARGE_m:inst8|T[5]      ;
+; MULTI_SIGNAL:inst164|T_CHG[6]                                          ; Merged with Pulse_CHARGE_m:inst8|T[6]      ;
+; MULTI_SIGNAL:inst164|T_CHG[7]                                          ; Merged with Pulse_CHARGE_m:inst8|T[7]      ;
+; MULTI_SIGNAL:inst164|T_CHG[8]                                          ; Merged with Pulse_CHARGE_m:inst8|T[8]      ;
+; MULTI_SIGNAL:inst164|T_CHG[9]                                          ; Merged with Pulse_CHARGE_m:inst8|T[9]      ;
+; MULTI_SIGNAL:inst164|T_CHG[10]                                         ; Merged with Pulse_CHARGE_m:inst8|T[10]     ;
+; MULTI_SIGNAL:inst164|T_CHG[11]                                         ; Merged with Pulse_CHARGE_m:inst8|T[11]     ;
+; MULTI_SIGNAL:inst164|T_CHG[12]                                         ; Merged with Pulse_CHARGE_m:inst8|T[12]     ;
+; MULTI_SIGNAL:inst164|T_CHG[13]                                         ; Merged with Pulse_CHARGE_m:inst8|T[13]     ;
+; MULTI_SIGNAL:inst164|T_CHG[14]                                         ; Merged with Pulse_CHARGE_m:inst8|T[14]     ;
+; MULTI_SIGNAL:inst164|T_CHG[15]                                         ; Merged with Pulse_CHARGE_m:inst8|T[15]     ;
+; Pulse_generate:inst53|t[0]                                             ; Merged with Pulse_generate:inst53|T_PS[0]  ;
+; Pulse_generate:inst53|t[1]                                             ; Merged with Pulse_generate:inst53|T_PS[1]  ;
+; Pulse_generate:inst53|t[2]                                             ; Merged with Pulse_generate:inst53|T_PS[2]  ;
+; Pulse_generate:inst53|t[3]                                             ; Merged with Pulse_generate:inst53|T_PS[3]  ;
+; Pulse_generate:inst53|t[4]                                             ; Merged with Pulse_generate:inst53|T_PS[4]  ;
+; Pulse_generate:inst53|t[5]                                             ; Merged with Pulse_generate:inst53|T_PS[5]  ;
+; Pulse_generate:inst53|t[6]                                             ; Merged with Pulse_generate:inst53|T_PS[6]  ;
+; Pulse_generate:inst53|t[7]                                             ; Merged with Pulse_generate:inst53|T_PS[7]  ;
+; Pulse_generate:inst53|t[8]                                             ; Merged with Pulse_generate:inst53|T_PS[8]  ;
+; Pulse_generate:inst53|t[9]                                             ; Merged with Pulse_generate:inst53|T_PS[9]  ;
+; Pulse_generate:inst53|t[10]                                            ; Merged with Pulse_generate:inst53|T_PS[10] ;
+; Pulse_generate:inst53|t[11]                                            ; Merged with Pulse_generate:inst53|T_PS[11] ;
+; Pulse_generate:inst53|t[12]                                            ; Merged with Pulse_generate:inst53|T_PS[12] ;
+; Pulse_generate:inst53|t[13]                                            ; Merged with Pulse_generate:inst53|T_PS[13] ;
+; Pulse_generate:inst53|t[14]                                            ; Merged with Pulse_generate:inst53|T_PS[14] ;
+; Pulse_generate:inst53|t[15]                                            ; Merged with Pulse_generate:inst53|T_PS[15] ;
+; RLY_CTR_8:inst7|RLY_st[0]                                              ; Merged with RLY_CTR_8:inst7|R1             ;
+; RLY_CTR_8:inst7|RLY_st[4]                                              ; Merged with RLY_CTR_8:inst7|R5             ;
+; Mac_16:inst97|cnt[0]                                                   ; Merged with Mac_16:inst96|cnt[0]           ;
+; Mac_16:inst97|cnt[1]                                                   ; Merged with Mac_16:inst96|cnt[1]           ;
+; Mac_16:inst97|cnt[2]                                                   ; Merged with Mac_16:inst96|cnt[2]           ;
+; Mac_16:inst97|cnt[3]                                                   ; Merged with Mac_16:inst96|cnt[3]           ;
+; Mast_TO_Slave:inst22|TMP1[4,6]                                         ; Merged with Mast_TO_Slave:inst22|TMP1[2]   ;
+; Pulse_generate:inst53|N_PS[15]                                         ; Merged with Pulse_generate:inst53|n[15]    ;
+; Pulse_generate:inst53|N_PS[14]                                         ; Merged with Pulse_generate:inst53|n[14]    ;
+; Pulse_generate:inst53|N_PS[13]                                         ; Merged with Pulse_generate:inst53|n[13]    ;
+; Pulse_count:inst63|q1[16..23]                                          ; Lost fanout                                ;
+; Total Number of Removed Registers = 95                                 ;                                            ;
++------------------------------------------------------------------------+--------------------------------------------+
+
+
++---------------------------------------------------------------------------------------------------------------------+
+; Removed Registers Triggering Further Register Optimizations                                                         ;
++--------------------------------------------+---------------------------+--------------------------------------------+
+; Register name                              ; Reason for Removal        ; Registers Removed due to This Register     ;
++--------------------------------------------+---------------------------+--------------------------------------------+
+; lm75bd:inst73|LM75B_DRV1:b2v_inst3|TEMP[0] ; Stuck at GND              ; lm75bd:inst73|LM75B_DRV1:b2v_inst3|TEM1[0] ;
+;                                            ; due to stuck port data_in ;                                            ;
++--------------------------------------------+---------------------------+--------------------------------------------+
+
+
++------------------------------------------------------+
+; General Register Statistics                          ;
++----------------------------------------------+-------+
+; Statistic                                    ; Value ;
++----------------------------------------------+-------+
+; Total registers                              ; 3587  ;
+; Number of registers using Synchronous Clear  ; 230   ;
+; Number of registers using Synchronous Load   ; 106   ;
+; Number of registers using Asynchronous Clear ; 1083  ;
+; Number of registers using Asynchronous Load  ; 0     ;
+; Number of registers using Clock Enable       ; 1075  ;
+; Number of registers using Preset             ; 0     ;
++----------------------------------------------+-------+
+
+
++----------------------------------------------------------------------------+
+; Inverted Register Statistics                                               ;
++------------------------------------------------------------------+---------+
+; Inverted Register                                                ; Fan out ;
++------------------------------------------------------------------+---------+
+; Pulse_CHARGE_m:inst8|q1[15]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[14]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[13]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[12]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[11]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[10]                                      ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[9]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[8]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[7]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[6]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[5]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[4]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[3]                                       ; 4       ;
+; Pulse_CHARGE_m:inst8|q1[2]                                       ; 4       ;
+; FPGA_TO_PC:inst3|add_div[5]                                      ; 2       ;
+; FPGA_TO_PC:inst3|add_div[6]                                      ; 2       ;
+; FPGA_TO_PC:inst3|add_div[1]                                      ; 2       ;
+; FPGA_TO_PC:inst3|add_div[2]                                      ; 2       ;
+; FPGA_TO_PC:inst3|add_div[4]                                      ; 2       ;
+; Pulse_generate:inst53|n1[15]                                     ; 2       ;
+; Pulse_generate:inst53|n1[14]                                     ; 2       ;
+; Pulse_generate:inst53|n1[13]                                     ; 2       ;
+; Pulse_generate:inst53|n1[12]                                     ; 2       ;
+; Pulse_generate:inst53|n1[11]                                     ; 2       ;
+; Pulse_generate:inst53|n1[10]                                     ; 2       ;
+; Pulse_generate:inst53|n1[9]                                      ; 2       ;
+; Pulse_generate:inst53|n1[8]                                      ; 2       ;
+; Pulse_generate:inst53|n1[7]                                      ; 2       ;
+; Pulse_generate:inst53|n1[6]                                      ; 2       ;
+; Pulse_generate:inst53|n1[5]                                      ; 2       ;
+; Pulse_generate:inst53|n1[4]                                      ; 2       ;
+; Pulse_generate:inst53|n1[3]                                      ; 2       ;
+; Pulse_generate:inst53|n1[2]                                      ; 2       ;
+; Pulse_generate:inst53|n1[1]                                      ; 2       ;
+; Mast_TO_Charger:inst26|add_div[5]                                ; 2       ;
+; Mast_TO_Charger:inst26|add_div[6]                                ; 2       ;
+; Mast_TO_Charger:inst26|add_div[1]                                ; 2       ;
+; Mast_TO_Charger:inst26|add_div[2]                                ; 2       ;
+; Mast_TO_Charger:inst26|add_div[4]                                ; 2       ;
+; Mast_TO_Slave:inst22|add_div[5]                                  ; 2       ;
+; Mast_TO_Slave:inst22|add_div[6]                                  ; 2       ;
+; Mast_TO_Slave:inst22|add_div[1]                                  ; 2       ;
+; Mast_TO_Slave:inst22|add_div[2]                                  ; 2       ;
+; Mast_TO_Slave:inst22|add_div[4]                                  ; 2       ;
+; Com_tx:inst31|dout                                               ; 1       ;
+; Com_tx:inst29|dout                                               ; 2       ;
+; Com_tx:inst27|dout                                               ; 1       ;
+; AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21|SDA_out ; 1       ;
+; Com_dly_clr:inst35|CLR                                           ; 234     ;
+; Pulse_generate:inst53|q1[15]                                     ; 3       ;
+; Pulse_generate:inst53|q1[14]                                     ; 3       ;
+; Pulse_generate:inst53|q1[13]                                     ; 3       ;
+; Pulse_generate:inst53|q1[12]                                     ; 3       ;
+; Pulse_generate:inst53|q1[11]                                     ; 3       ;
+; Pulse_generate:inst53|q1[10]                                     ; 3       ;
+; Pulse_generate:inst53|q1[9]                                      ; 3       ;
+; Pulse_generate:inst53|q1[8]                                      ; 3       ;
+; Pulse_generate:inst53|q1[7]                                      ; 3       ;
+; Pulse_generate:inst53|q1[6]                                      ; 3       ;
+; Pulse_generate:inst53|q1[5]                                      ; 3       ;
+; Pulse_generate:inst53|q1[4]                                      ; 3       ;
+; Pulse_generate:inst53|q1[3]                                      ; 3       ;
+; Com_dly_RST:inst49|RST                                           ; 1       ;
+; Total number of inverted registers = 63                          ;         ;
++------------------------------------------------------------------+---------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                     ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                           ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------+
+; 3:1                ; 8 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|TMP3[6]                                  ;
+; 3:1                ; 24 bits   ; 48 LEs        ; 48 LEs               ; 0 LEs                  ; Yes        ; |Top|MULTI_SIGNAL:inst164|q1[12]                                     ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |Top|AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21|dat[0] ;
+; 3:1                ; 24 bits   ; 48 LEs        ; 48 LEs               ; 0 LEs                  ; Yes        ; |Top|MULTI_SIGNAL:inst164|TEXP1[9]                                   ;
+; 3:1                ; 10 bits   ; 20 LEs        ; 10 LEs               ; 10 LEs                 ; Yes        ; |Top|WK_ON_show:inst153|q1[2]                                        ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|TMP1[1]                                  ;
+; 4:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |Top|Pulse_generate:inst53|q1[1]                                     ;
+; 5:1                ; 8 bits    ; 24 LEs        ; 8 LEs                ; 16 LEs                 ; Yes        ; |Top|Mast_TO_Charger:inst26|TMP2[7]                                  ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |Top|AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21|dat[3] ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|DAT[6]                                   ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|DAT[0]                                   ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|DAT[5]                                   ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |Top|Mast_TO_Charger:inst26|DAT[3]                                   ;
+; 33:1               ; 3 bits    ; 66 LEs        ; 48 LEs               ; 18 LEs                 ; Yes        ; |Top|FPGA_TO_PC:inst3|DAT[2]                                         ;
+; 20:1               ; 4 bits    ; 52 LEs        ; 24 LEs               ; 28 LEs                 ; Yes        ; |Top|FPGA_TO_PC:inst3|TMP4[4]                                        ;
+; 20:1               ; 42 bits   ; 546 LEs       ; 252 LEs              ; 294 LEs                ; Yes        ; |Top|FPGA_TO_PC:inst3|TMP15[6]                                       ;
+; 20:1               ; 8 bits    ; 104 LEs       ; 48 LEs               ; 56 LEs                 ; Yes        ; |Top|FPGA_TO_PC:inst3|TMP18[7]                                       ;
+; 20:1               ; 3 bits    ; 39 LEs        ; 24 LEs               ; 15 LEs                 ; Yes        ; |Top|FPGA_TO_PC:inst3|TMP4[3]                                        ;
+; 20:1               ; 63 bits   ; 819 LEs       ; 441 LEs              ; 378 LEs                ; Yes        ; |Top|FPGA_TO_PC:inst3|TMP9[3]                                        ;
+; 22:1               ; 2 bits    ; 28 LEs        ; 24 LEs               ; 4 LEs                  ; Yes        ; |Top|Mast_TO_Slave:inst22|DAT[7]                                     ;
+; 22:1               ; 2 bits    ; 28 LEs        ; 24 LEs               ; 4 LEs                  ; Yes        ; |Top|Mast_TO_Slave:inst22|DAT[3]                                     ;
+; 24:1               ; 2 bits    ; 32 LEs        ; 28 LEs               ; 4 LEs                  ; Yes        ; |Top|FPGA_TO_PC:inst3|DAT[7]                                         ;
+; 24:1               ; 2 bits    ; 32 LEs        ; 28 LEs               ; 4 LEs                  ; Yes        ; |Top|FPGA_TO_PC:inst3|DAT[3]                                         ;
+; 3:1                ; 15 bits   ; 30 LEs        ; 30 LEs               ; 0 LEs                  ; Yes        ; |Top|Pulse_generate:inst53|n1[8]                                     ;
+; 4:1                ; 13 bits   ; 26 LEs        ; 26 LEs               ; 0 LEs                  ; Yes        ; |Top|Pulse_generate:inst53|q1[10]                                    ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------+
+
+
++--------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: Const_8:inst169 ;
++----------------+-------+-------------------------------------+
+; Parameter Name ; Value ; Type                                ;
++----------------+-------+-------------------------------------+
+; const          ; 170   ; Unsigned Integer                    ;
++----------------+-------+-------------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings Tables in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++-------------------------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: LM75BD:inst73|Const_3:b2v_inst15 ;
++----------------+-------+------------------------------------------------------+
+; Parameter Name ; Value ; Type                                                 ;
++----------------+-------+------------------------------------------------------+
+; const          ; 0     ; Signed Integer                                       ;
++----------------+-------+------------------------------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings Tables in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus II Analysis & Synthesis
+    Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
+    Info: Processing started: Tue Jan 14 15:44:38 2020
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off MAST_CTRV_X4.31 -c MAST_CTR
+Info: Parallel compilation is enabled and will use 4 of the 4 processors detected
+Info: Found 1 design units, including 1 entities, in source file top.bdf
+    Info: Found entity 1: Top
+Info: Found 2 design units, including 1 entities, in source file clk_div_10000.vhd
+    Info: Found design unit 1: clk_div_10000-behave
+    Info: Found entity 1: clk_div_10000
+Info: Found 2 design units, including 1 entities, in source file const_3.vhd
+    Info: Found design unit 1: Const_3-behave
+    Info: Found entity 1: Const_3
+Info: Found 2 design units, including 1 entities, in source file ad_mcp3202.vhd
+    Info: Found design unit 1: AD_MCP3202-bev
+    Info: Found entity 1: AD_MCP3202
+Info: Found 2 design units, including 1 entities, in source file ad_trig.vhd
+    Info: Found design unit 1: AD_trig-behave
+    Info: Found entity 1: AD_trig
+Info: Found 2 design units, including 1 entities, in source file clk_div_500.vhd
+    Info: Found design unit 1: clk_div_500-behave
+    Info: Found entity 1: clk_div_500
+Info: Found 2 design units, including 1 entities, in source file countor3.vhd
+    Info: Found design unit 1: countor3-behave
+    Info: Found entity 1: countor3
+Info: Found 2 design units, including 1 entities, in source file level_edg.vhd
+    Info: Found design unit 1: LEVEL_EDG-behave
+    Info: Found entity 1: LEVEL_EDG
+Info: Found 2 design units, including 1 entities, in source file countor11.vhd
+    Info: Found design unit 1: countor11-behave
+    Info: Found entity 1: countor11
+Info: Found 2 design units, including 1 entities, in source file fpga_to_pc.vhd
+    Info: Found design unit 1: FPGA_TO_PC-behave
+    Info: Found entity 1: FPGA_TO_PC
+Info: Found 1 design units, including 1 entities, in source file hc74374.bdf
+    Info: Found entity 1: HC74374
+Info: Found 2 design units, including 1 entities, in source file delay_1.vhd
+    Info: Found design unit 1: delay_1-behave
+    Info: Found entity 1: delay_1
+Info: Found 2 design units, including 1 entities, in source file countor_t_over.vhd
+    Info: Found design unit 1: countor_T_over-behave
+    Info: Found entity 1: countor_T_over
+Info: Found 2 design units, including 1 entities, in source file comp_clr.vhd
+    Info: Found design unit 1: comp_clr-behave
+    Info: Found entity 1: comp_clr
+Info: Found 2 design units, including 1 entities, in source file countor10.vhd
+    Info: Found design unit 1: countor10-behave
+    Info: Found entity 1: countor10
+Info: Found 2 design units, including 1 entities, in source file clk_gen.vhd
+    Info: Found design unit 1: clk_Gen-behave
+    Info: Found entity 1: clk_Gen
+Info: Found 2 design units, including 1 entities, in source file trig_100.vhd
+    Info: Found design unit 1: trig_100-behave
+    Info: Found entity 1: trig_100
+Info: Found 2 design units, including 1 entities, in source file countor_addr_rx_cnt.vhd
+    Info: Found design unit 1: countor_addr_RX_cnt-behave
+    Info: Found entity 1: countor_addr_RX_cnt
+Info: Found 2 design units, including 1 entities, in source file dat_store_rx.vhd
+    Info: Found design unit 1: dat_store_RX-behave
+    Info: Found entity 1: dat_store_RX
+Info: Found 2 design units, including 1 entities, in source file dat_confm_rx.vhd
+    Info: Found design unit 1: dat_CONFM_RX-behave
+    Info: Found entity 1: dat_CONFM_RX
+Info: Found 1 design units, including 1 entities, in source file rcv_from_pc.bdf
+    Info: Found entity 1: RCV_FROM_PC
+Info: Found 1 design units, including 1 entities, in source file rcv_deal.bdf
+    Info: Found entity 1: RCV_DEAL
+Info: Found 2 design units, including 1 entities, in source file div_500.vhd
+    Info: Found design unit 1: DIV_500-behave
+    Info: Found entity 1: DIV_500
+Info: Found 1 design units, including 1 entities, in source file comtx.bdf
+    Info: Found entity 1: comtx
+Info: Found 1 design units, including 1 entities, in source file comt.bdf
+    Info: Found entity 1: comt
+Info: Found 1 design units, including 1 entities, in source file coms.bdf
+    Info: Found entity 1: comS
+Info: Found 2 design units, including 1 entities, in source file com_tx.vhd
+    Info: Found design unit 1: Com_tx-behave
+    Info: Found entity 1: Com_tx
+Info: Found 2 design units, including 1 entities, in source file com_rx.vhd
+    Info: Found design unit 1: Com_rx-behave
+    Info: Found entity 1: Com_rx
+Info: Found 1 design units, including 1 entities, in source file com_rxd.bdf
+    Info: Found entity 1: Com_RXD
+Info: Found 2 design units, including 1 entities, in source file cmd_deal_m.vhd
+    Info: Found design unit 1: CMD_DEAL_M-behave
+    Info: Found entity 1: CMD_DEAL_M
+Info: Found 2 design units, including 1 entities, in source file aux_deal.vhd
+    Info: Found design unit 1: AUX_DEAL-behave
+    Info: Found entity 1: AUX_DEAL
+Info: Found 1 design units, including 1 entities, in source file cmd_trig.bdf
+    Info: Found entity 1: CMD_trig
+Info: Found 1 design units, including 1 entities, in source file aux_trig.bdf
+    Info: Found entity 1: AUX_trig
+Info: Found 1 design units, including 1 entities, in source file cmd_aux_deal.bdf
+    Info: Found entity 1: CMD_AUX_DEAL
+Info: Found 2 design units, including 1 entities, in source file lock_1.vhd
+    Info: Found design unit 1: Lock_1-behave
+    Info: Found entity 1: Lock_1
+Info: Found 2 design units, including 1 entities, in source file dat_sel.vhd
+    Info: Found design unit 1: Dat_SEL-behave
+    Info: Found entity 1: Dat_SEL
+Info: Found 2 design units, including 1 entities, in source file rly_ctr_8.vhd
+    Info: Found design unit 1: RLY_CTR_8-behave
+    Info: Found entity 1: RLY_CTR_8
+Info: Found 2 design units, including 1 entities, in source file mast_to_slave.vhd
+    Info: Found design unit 1: Mast_TO_Slave-behave
+    Info: Found entity 1: Mast_TO_Slave
+Info: Found 2 design units, including 1 entities, in source file en_tx_sel.vhd
+    Info: Found design unit 1: EN_TX_SEL-behave
+    Info: Found entity 1: EN_TX_SEL
+Info: Found 2 design units, including 1 entities, in source file mast_to_charger.vhd
+    Info: Found design unit 1: Mast_TO_Charger-behave
+    Info: Found entity 1: Mast_TO_Charger
+Info: Found 2 design units, including 1 entities, in source file mast_to_pfc.vhd
+    Info: Found design unit 1: Mast_TO_PFC-behave
+    Info: Found entity 1: Mast_TO_PFC
+Info: Found 1 design units, including 1 entities, in source file top2.bdf
+    Info: Found entity 1: TOP2
+Info: Found 2 design units, including 1 entities, in source file auto_ask.vhd
+    Info: Found design unit 1: Auto_ask-behave
+    Info: Found entity 1: Auto_ask
+Info: Found 1 design units, including 1 entities, in source file com_rx_charger.bdf
+    Info: Found entity 1: Com_rx_charger
+Info: Found 2 design units, including 1 entities, in source file countor_addr_rx_cnt_ch.vhd
+    Info: Found design unit 1: countor_addr_RX_cnt_CH-behave
+    Info: Found entity 1: countor_addr_RX_cnt_CH
+Info: Found 1 design units, including 1 entities, in source file rcv_deal_ch.bdf
+    Info: Found entity 1: RCV_DEAL_CH
+Info: Found 2 design units, including 1 entities, in source file dat_store_rx_ch.vhd
+    Info: Found design unit 1: dat_store_RX_CH-behave
+    Info: Found entity 1: dat_store_RX_CH
+Info: Found 2 design units, including 1 entities, in source file dat_confm_rx_ch.vhd
+    Info: Found design unit 1: dat_CONFM_RX_CH-behave
+    Info: Found entity 1: dat_CONFM_RX_CH
+Info: Found 1 design units, including 1 entities, in source file com_rx_pfc.bdf
+    Info: Found entity 1: Com_rx_PFC
+Info: Found 2 design units, including 1 entities, in source file countor_addr_rx_cnt_pfc.vhd
+    Info: Found design unit 1: countor_addr_RX_cnt_PFC-behave
+    Info: Found entity 1: countor_addr_RX_cnt_PFC
+Info: Found 1 design units, including 1 entities, in source file rcv_deal_pfc.bdf
+    Info: Found entity 1: RCV_DEAL_PFC
+Info: Found 2 design units, including 1 entities, in source file dat_store_rx_pfc.vhd
+    Info: Found design unit 1: dat_store_RX_PFC-behave
+    Info: Found entity 1: dat_store_RX_PFC
+Info: Found 2 design units, including 1 entities, in source file dat_confm_rx_pfc.vhd
+    Info: Found design unit 1: dat_CONFM_RX_PFC-behave
+    Info: Found entity 1: dat_CONFM_RX_PFC
+Info: Found 2 design units, including 1 entities, in source file multi_signal.vhd
+    Info: Found design unit 1: MULTI_SIGNAL-behave
+    Info: Found entity 1: MULTI_SIGNAL
+Info: Found 2 design units, including 1 entities, in source file pulse_charge_m.vhd
+    Info: Found design unit 1: Pulse_CHARGE_m-behave
+    Info: Found entity 1: Pulse_CHARGE_m
+Info: Found 2 design units, including 1 entities, in source file pulse_generate.vhd
+    Info: Found design unit 1: Pulse_generate-behave
+    Info: Found entity 1: Pulse_generate
+Info: Found 2 design units, including 1 entities, in source file syn_dat_lock.vhd
+    Info: Found design unit 1: SYN_DAT_LOCK-behave
+    Info: Found entity 1: SYN_DAT_LOCK
+Info: Found 2 design units, including 1 entities, in source file pulse_count.vhd
+    Info: Found design unit 1: Pulse_count-behave
+    Info: Found entity 1: Pulse_count
+Info: Found 2 design units, including 1 entities, in source file e_trig_l.vhd
+    Info: Found design unit 1: E_trig_L-behave
+    Info: Found entity 1: E_trig_L
+Info: Found 2 design units, including 1 entities, in source file clk_x2.vhd
+    Info: Found design unit 1: clk_X2-behave
+    Info: Found entity 1: clk_X2
+Info: Found 2 design units, including 1 entities, in source file set_u_lock.vhd
+    Info: Found design unit 1: SET_U_LOCK-behave
+    Info: Found entity 1: SET_U_LOCK
+Info: Found 2 design units, including 1 entities, in source file const_8.vhd
+    Info: Found design unit 1: Const_8-behave
+    Info: Found entity 1: Const_8
+Info: Found 2 design units, including 1 entities, in source file rx_module.vhd
+    Info: Found design unit 1: Rx_Module-behave
+    Info: Found entity 1: Rx_Module
+Info: Found 2 design units, including 1 entities, in source file chk_tx.vhd
+    Info: Found design unit 1: CHK_TX-behave
+    Info: Found entity 1: CHK_TX
+Info: Found 2 design units, including 1 entities, in source file chk_tx2.vhd
+    Info: Found design unit 1: CHK_TX2-behave
+    Info: Found entity 1: CHK_TX2
+Info: Found 2 design units, including 1 entities, in source file chk_trig.vhd
+    Info: Found design unit 1: CHK_trig-behave
+    Info: Found entity 1: CHK_trig
+Info: Found 2 design units, including 1 entities, in source file trig_out.vhd
+    Info: Found design unit 1: Trig_OUT-behave
+    Info: Found entity 1: Trig_OUT
+Info: Found 1 design units, including 1 entities, in source file syn_out_ctr.bdf
+    Info: Found entity 1: SYN_OUT_CTR
+Info: Found 2 design units, including 1 entities, in source file wk_st_delay.vhd
+    Info: Found design unit 1: WK_st_delay-behave
+    Info: Found entity 1: WK_st_delay
+Info: Found 2 design units, including 1 entities, in source file bit_byte.vhd
+    Info: Found design unit 1: Bit_Byte-behave
+    Info: Found entity 1: Bit_Byte
+Info: Found 2 design units, including 1 entities, in source file lock_en.vhd
+    Info: Found design unit 1: Lock_EN-behave
+    Info: Found entity 1: Lock_EN
+Info: Found 2 design units, including 1 entities, in source file err_chk.vhd
+    Info: Found design unit 1: ERR_CHK-behave
+    Info: Found entity 1: ERR_CHK
+Info: Found 2 design units, including 1 entities, in source file bit_2.vhd
+    Info: Found design unit 1: Bit_2-behave
+    Info: Found entity 1: Bit_2
+Info: Found 2 design units, including 1 entities, in source file mac_8.vhd
+    Info: Found design unit 1: Mac_8-behave
+    Info: Found entity 1: Mac_8
+Info: Found 2 design units, including 1 entities, in source file mac_16.vhd
+    Info: Found design unit 1: Mac_16-behave
+    Info: Found entity 1: Mac_16
+Info: Found 2 design units, including 1 entities, in source file lock_x1.vhd
+    Info: Found design unit 1: Lock_X1-behave
+    Info: Found entity 1: Lock_X1
+Info: Found 2 design units, including 1 entities, in source file rxd_stop.vhd
+    Info: Found design unit 1: RXD_STOP-behave
+    Info: Found entity 1: RXD_STOP
+Info: Found 2 design units, including 1 entities, in source file chk_tx3.vhd
+    Info: Found design unit 1: CHK_TX3-behave
+    Info: Found entity 1: CHK_TX3
+Info: Found 2 design units, including 1 entities, in source file com_dly_clr.vhd
+    Info: Found design unit 1: Com_dly_clr-behave
+    Info: Found entity 1: Com_dly_clr
+Info: Found 2 design units, including 1 entities, in source file com_dly_rst.vhd
+    Info: Found design unit 1: Com_dly_RST-behave
+    Info: Found entity 1: Com_dly_RST
+Info: Found 2 design units, including 1 entities, in source file hv_chk.vhd
+    Info: Found design unit 1: HV_CHK-behave
+    Info: Found entity 1: HV_CHK
+Info: Found 2 design units, including 1 entities, in source file trig_aux.vhd
+    Info: Found design unit 1: trig_AUX-behave
+    Info: Found entity 1: trig_AUX
+Info: Found 2 design units, including 1 entities, in source file byte_word.vhd
+    Info: Found design unit 1: Byte_Word-behave
+    Info: Found entity 1: Byte_Word
+Info: Found 2 design units, including 1 entities, in source file single_m.vhd
+    Info: Found design unit 1: Single_M-behave
+    Info: Found entity 1: Single_M
+Info: Found 2 design units, including 1 entities, in source file m_ok_chk.vhd
+    Info: Found design unit 1: M_OK_CHK-behave
+    Info: Found entity 1: M_OK_CHK
+Info: Found 2 design units, including 1 entities, in source file wk_on_show.vhd
+    Info: Found design unit 1: WK_ON_show-behave
+    Info: Found entity 1: WK_ON_show
+Info: Found 2 design units, including 1 entities, in source file com_dly_en.vhd
+    Info: Found design unit 1: Com_dly_EN-behave
+    Info: Found entity 1: Com_dly_EN
+Info: Found 2 design units, including 1 entities, in source file single_m2.vhd
+    Info: Found design unit 1: Single_M2-behave
+    Info: Found entity 1: Single_M2
+Warning: Can't analyze file -- file Pulse_CHK.vhd is missing
+Info: Found 2 design units, including 1 entities, in source file lock_8_bit.vhd
+    Info: Found design unit 1: Lock_8_BIT-behave
+    Info: Found entity 1: Lock_8_BIT
+Info: Found 2 design units, including 1 entities, in source file lock_chg_dat_sel.vhd
+    Info: Found design unit 1: Lock_CHG_DAT_SEL-behave
+    Info: Found entity 1: Lock_CHG_DAT_SEL
+Info: Found 1 design units, including 1 entities, in source file at_dat_store.bdf
+    Info: Found entity 1: AT_DAT_STORE
+Info: Found 2 design units, including 1 entities, in source file dly_rd_rom.vhd
+    Info: Found design unit 1: DLY_RD_ROM-behave
+    Info: Found entity 1: DLY_RD_ROM
+Info: Found 2 design units, including 1 entities, in source file countor_clk_flash.vhd
+    Info: Found design unit 1: countor_clk_FLASH-behave
+    Info: Found entity 1: countor_clk_FLASH
+Info: Found 2 design units, including 1 entities, in source file countor_addr22.vhd
+    Info: Found design unit 1: countor_addr22-behave
+    Info: Found entity 1: countor_addr22
+Info: Found 2 design units, including 1 entities, in source file dly_rw_sel.vhd
+    Info: Found design unit 1: DLY_RW_SEL-behave
+    Info: Found entity 1: DLY_RW_SEL
+Info: Found 1 design units, including 1 entities, in source file at24c02.bdf
+    Info: Found entity 1: AT24C02
+Info: Found 2 design units, including 1 entities, in source file flash_i2c_core.vhd
+    Info: Found design unit 1: Flash_I2C_core-bev
+    Info: Found entity 1: Flash_I2C_core
+Info: Found 2 design units, including 1 entities, in source file dat_pick16.vhd
+    Info: Found design unit 1: dat_pick16-behave
+    Info: Found entity 1: dat_pick16
+Info: Found 1 design units, including 1 entities, in source file read_flash.bdf
+    Info: Found entity 1: READ_FLASH
+Info: Found 2 design units, including 1 entities, in source file lock_8.vhd
+    Info: Found design unit 1: Lock_8-behave
+    Info: Found entity 1: Lock_8
+Info: Found 2 design units, including 1 entities, in source file auto_addr_dly.vhd
+    Info: Found design unit 1: Auto_addr_dly-behave
+    Info: Found entity 1: Auto_addr_dly
+Warning: Can't analyze file -- file SYN_DAT_DLY.vhd is missing
+Info: Elaborating entity "Top" for the top level hierarchy
+Warning: Block or symbol "OR4" of instance "inst112" overlaps another block or symbol
+Warning: Pin "EXT_X1" not connected
+Warning: Pin "EXT_X2" not connected
+Warning: Pin "EXT_X3" not connected
+Warning: Pin "EXT_X4" not connected
+Warning: Pin "EXT_X5" not connected
+Warning: Pin "EXT_X6" not connected
+Warning: Pin "RXD2" not connected
+Warning: Pin "EXT_IO15" not connected
+Warning: Pin "EXT_IO5_RO2_485" not connected
+Warning: Pin "RXD3_A" not connected
+Warning: Pin "EXT_IO1_TX3" not connected
+Warning: Pin "EXT_IO16_TX2_A" not connected
+Warning: Pin "EXT_IO14_TX1_A" not connected
+Warning: Primitive "NOT" of instance "inst176" not used
+Warning: Primitive "NOT" of instance "inst177" not used
+Warning: Primitive "NOT" of instance "inst18" not used
+Warning: Primitive "VCC" of instance "inst20" not used
+Info: Elaborating entity "AT_DAT_STORE" for hierarchy "AT_DAT_STORE:inst170"
+Info: Elaborating entity "AT24C02" for hierarchy "AT_DAT_STORE:inst170|AT24C02:inst6"
+Warning: Block or symbol "TRI" of instance "inst149" overlaps another block or symbol
+Info: Elaborating entity "Flash_I2C_core" for hierarchy "AT_DAT_STORE:inst170|AT24C02:inst6|Flash_I2C_core:inst21"
+Info: Elaborating entity "DLY_RW_SEL" for hierarchy "AT_DAT_STORE:inst170|DLY_RW_SEL:inst13"
+Warning (10492): VHDL Process Statement warning at DLY_RW_SEL.vhd(17): signal "EN" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Info: Elaborating entity "DLY_RD_ROM" for hierarchy "AT_DAT_STORE:inst170|DLY_RD_ROM:inst2"
+Info: Elaborating entity "countor_addr22" for hierarchy "AT_DAT_STORE:inst170|countor_addr22:inst9"
+Info: Elaborating entity "countor_clk_FLASH" for hierarchy "AT_DAT_STORE:inst170|countor_clk_FLASH:inst1"
+Info: Elaborating entity "delay_1" for hierarchy "AT_DAT_STORE:inst170|delay_1:inst11"
+Info: Elaborating entity "dat_pick16" for hierarchy "AT_DAT_STORE:inst170|dat_pick16:inst7"
+Info: Elaborating entity "READ_FLASH" for hierarchy "AT_DAT_STORE:inst170|READ_FLASH:inst10"
+Info: Elaborating entity "Lock_8" for hierarchy "AT_DAT_STORE:inst170|READ_FLASH:inst10|Lock_8:inst5"
+Info: Elaborating entity "CMD_AUX_DEAL" for hierarchy "CMD_AUX_DEAL:inst28"
+Info: Elaborating entity "CMD_trig" for hierarchy "CMD_AUX_DEAL:inst28|CMD_trig:inst21"
+Info: Elaborating entity "CMD_DEAL_M" for hierarchy "CMD_AUX_DEAL:inst28|CMD_DEAL_M:inst22"
+Info: Elaborating entity "Com_RXD" for hierarchy "Com_RXD:inst32"
+Info: Elaborating entity "RCV_DEAL" for hierarchy "Com_RXD:inst32|RCV_DEAL:inst18"
+Info: Elaborating entity "dat_CONFM_RX" for hierarchy "Com_RXD:inst32|RCV_DEAL:inst18|dat_CONFM_RX:inst"
+Info: Elaborating entity "dat_store_RX" for hierarchy "Com_RXD:inst32|RCV_DEAL:inst18|dat_store_RX:inst1"
+Warning (10036): Verilog HDL or VHDL warning at dat_store_RX.vhd(27): object "daX" assigned a value but never read
+Info: Elaborating entity "Com_rx" for hierarchy "Com_RXD:inst32|Com_rx:inst31"
+Warning (10036): Verilog HDL or VHDL warning at Com_rx.vhd(16): object "daX" assigned a value but never read
+Info: Elaborating entity "countor_addr_RX_cnt" for hierarchy "Com_RXD:inst32|countor_addr_RX_cnt:inst16"
+Info: Elaborating entity "countor_T_over" for hierarchy "Com_RXD:inst32|countor_T_over:inst10"
+Info: Elaborating entity "comp_clr" for hierarchy "Com_RXD:inst32|comp_clr:inst17"
+Info: Elaborating entity "clk_Gen" for hierarchy "clk_Gen:inst6"
+Warning (10492): VHDL Process Statement warning at clk_Gen.vhd(99): signal "clk_50M" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Warning (10492): VHDL Process Statement warning at clk_Gen.vhd(106): signal "clk_50M" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Warning (10492): VHDL Process Statement warning at clk_Gen.vhd(141): signal "clk_50M" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Warning (10492): VHDL Process Statement warning at clk_Gen.vhd(148): signal "clk_50M" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Warning: Using design file rst_g.vhd, which is not specified as a design file for the current project, but contains definitions for 2 design units and 1 entities in project
+    Info: Found design unit 1: RST_G-behave
+    Info: Found entity 1: RST_G
+Info: Elaborating entity "RST_G" for hierarchy "RST_G:inst1"
+Info: Elaborating entity "LEVEL_EDG" for hierarchy "LEVEL_EDG:inst14"
+Info: Elaborating entity "Const_8" for hierarchy "Const_8:inst169"
+Warning: Using design file lm75bd.vhd, which is not specified as a design file for the current project, but contains definitions for 2 design units and 1 entities in project
+    Info: Found design unit 1: lm75bd-bdf_type
+    Info: Found entity 1: lm75bd
+Info: Elaborating entity "LM75BD" for hierarchy "LM75BD:inst73"
+Info: Elaborating entity "clk_div_500" for hierarchy "LM75BD:inst73|clk_div_500:b2v_inst"
+Info: Elaborating entity "Const_3" for hierarchy "LM75BD:inst73|Const_3:b2v_inst15"
+Warning: Using design file trig_rvs.vhd, which is not specified as a design file for the current project, but contains definitions for 2 design units and 1 entities in project
+    Info: Found design unit 1: trig_rvs-bdf_type
+    Info: Found entity 1: trig_rvs
+Info: Elaborating entity "trig_rvs" for hierarchy "LM75BD:inst73|trig_rvs:b2v_inst193"
+Warning: Using design file lm75b_drv1.vhd, which is not specified as a design file for the current project, but contains definitions for 2 design units and 1 entities in project
+    Info: Found design unit 1: LM75B_DRV1-behave
+    Info: Found entity 1: LM75B_DRV1
+Info: Elaborating entity "lm75b_drv1" for hierarchy "LM75BD:inst73|lm75b_drv1:b2v_inst3"
+Info: Elaborating entity "DIV_500" for hierarchy "DIV_500:inst10"
+Info: Elaborating entity "trig_rvs" for hierarchy "trig_rvs:inst46"
+Info: Elaborating entity "Com_rx_charger" for hierarchy "Com_rx_charger:inst44"
+Info: Elaborating entity "RCV_DEAL_CH" for hierarchy "Com_rx_charger:inst44|RCV_DEAL_CH:inst42"
+Info: Elaborating entity "dat_CONFM_RX_CH" for hierarchy "Com_rx_charger:inst44|RCV_DEAL_CH:inst42|dat_CONFM_RX_CH:inst3"
+Info: Elaborating entity "dat_store_RX_CH" for hierarchy "Com_rx_charger:inst44|RCV_DEAL_CH:inst42|dat_store_RX_CH:inst2"
+Warning (10036): Verilog HDL or VHDL warning at dat_store_RX_CH.vhd(26): object "daX" assigned a value but never read
+Info: Elaborating entity "countor_addr_RX_cnt_CH" for hierarchy "Com_rx_charger:inst44|countor_addr_RX_cnt_CH:inst11"
+Info: Elaborating entity "Com_dly_RST" for hierarchy "Com_dly_RST:inst49"
+Info: Elaborating entity "Com_dly_EN" for hierarchy "Com_dly_EN:inst156"
+Info: Elaborating entity "RLY_CTR_8" for hierarchy "RLY_CTR_8:inst7"
+Info: Elaborating entity "Lock_1" for hierarchy "Lock_1:inst105"
+Info: Elaborating entity "RXD_STOP" for hierarchy "RXD_STOP:inst116"
+Info: Elaborating entity "Mac_16" for hierarchy "Mac_16:inst97"
+Info: Elaborating entity "Com_dly_clr" for hierarchy "Com_dly_clr:inst35"
+Info: Elaborating entity "Com_tx" for hierarchy "Com_tx:inst27"
+Info: Elaborating entity "FPGA_TO_PC" for hierarchy "FPGA_TO_PC:inst3"
+Info: Elaborating entity "Dat_SEL" for hierarchy "Dat_SEL:inst2"
+Info: Elaborating entity "SET_U_LOCK" for hierarchy "SET_U_LOCK:inst54"
+Info: Elaborating entity "Pulse_generate" for hierarchy "Pulse_generate:inst53"
+Info: Elaborating entity "MULTI_SIGNAL" for hierarchy "MULTI_SIGNAL:inst164"
+Info: Elaborating entity "M_OK_CHK" for hierarchy "M_OK_CHK:inst146"
+Info: Elaborating entity "AD_MCP3202" for hierarchy "AD_MCP3202:inst"
+Info: Elaborating entity "trig_AUX" for hierarchy "trig_AUX:inst52"
+Info: Elaborating entity "Pulse_CHARGE_m" for hierarchy "Pulse_CHARGE_m:inst8"
+Info: Elaborating entity "E_trig_L" for hierarchy "E_trig_L:inst64"
+Info: Elaborating entity "ERR_CHK" for hierarchy "ERR_CHK:inst57"
+Info: Elaborating entity "Rx_Module" for hierarchy "Rx_Module:inst68"
+Warning (10036): Verilog HDL or VHDL warning at Rx_Module.vhd(16): object "TP" assigned a value but never read
+Info: Elaborating entity "CHK_TX3" for hierarchy "CHK_TX3:inst118"
+Info: Elaborating entity "CHK_trig" for hierarchy "CHK_trig:inst80"
+Info: Elaborating entity "WK_st_delay" for hierarchy "WK_st_delay:inst88"
+Info: Elaborating entity "Lock_EN" for hierarchy "Lock_EN:inst16"
+Info: Elaborating entity "Pulse_count" for hierarchy "Pulse_count:inst63"
+Info: Elaborating entity "SYN_OUT_CTR" for hierarchy "SYN_OUT_CTR:inst83"
+Info: Elaborating entity "Trig_OUT" for hierarchy "SYN_OUT_CTR:inst83|Trig_OUT:inst85"
+Info: Elaborating entity "Bit_Byte" for hierarchy "Bit_Byte:inst91"
+Info: Elaborating entity "Bit_2" for hierarchy "Bit_2:inst72"
+Info: Elaborating entity "Single_M" for hierarchy "Single_M:inst145"
+Info: Elaborating entity "Byte_Word" for hierarchy "Byte_Word:inst37"
+Info: Elaborating entity "Lock_CHG_DAT_SEL" for hierarchy "Lock_CHG_DAT_SEL:inst185"
+Warning (10492): VHDL Process Statement warning at Lock_CHG_DAT_SEL.vhd(30): signal "CLR" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
+Info: Elaborating entity "CHK_TX" for hierarchy "CHK_TX:inst67"
+Info: Elaborating entity "CHK_TX2" for hierarchy "CHK_TX2:inst69"
+Info: Elaborating entity "WK_ON_show" for hierarchy "WK_ON_show:inst153"
+Info: Elaborating entity "Mast_TO_Charger" for hierarchy "Mast_TO_Charger:inst26"
+Info: Elaborating entity "Auto_ask" for hierarchy "Auto_ask:inst39"
+Info: Elaborating entity "EN_TX_SEL" for hierarchy "EN_TX_SEL:inst25"
+Info: Elaborating entity "Mast_TO_Slave" for hierarchy "Mast_TO_Slave:inst22"
+Info: Elaborating entity "Auto_addr_dly" for hierarchy "Auto_addr_dly:inst171"
+Warning: Tri-state node(s) do not directly drive top-level pin(s)
+    Warning: Converted the fan-out from the tri-state buffer "lm75bd:inst73|SDA_IN" to the node "lm75bd:inst73|LM75B_DRV1:b2v_inst3|TEMP[6]" into an OR gate
+Info: Registers with preset signals will power-up high
+Info: DEV_CLRn pin will set, and not reset, register with preset signal due to NOT Gate Push-Back
+Warning: Output pins are stuck at VCC or GND
+    Warning (13410): Pin "LED1" is stuck at GND
+Info: Timing-Driven Synthesis is running
+Info: 8 registers lost all their fanouts during netlist optimizations. The first 8 are displayed below.
+    Info: Register "Pulse_count:inst63|q1[16]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[17]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[18]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[19]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[20]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[21]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[22]" lost all its fanouts during netlist optimizations.
+    Info: Register "Pulse_count:inst63|q1[23]" lost all its fanouts during netlist optimizations.
+Warning: Ignored assignments for entity "MAST_CTR" -- entity does not exist in design
+    Warning: Assignment for entity set_global_assignment -name LL_ROOT_REGION ON -entity MAST_CTR -section_id "Root Region" was ignored
+    Warning: Assignment for entity set_global_assignment -name LL_MEMBER_STATE LOCKED -entity MAST_CTR -section_id "Root Region" was ignored
+Warning: Design contains 13 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "EXT_X1"
+    Warning (15610): No output dependent on input pin "EXT_X2"
+    Warning (15610): No output dependent on input pin "EXT_X3"
+    Warning (15610): No output dependent on input pin "EXT_X4"
+    Warning (15610): No output dependent on input pin "EXT_X5"
+    Warning (15610): No output dependent on input pin "EXT_X6"
+    Warning (15610): No output dependent on input pin "RXD2"
+    Warning (15610): No output dependent on input pin "EXT_IO15"
+    Warning (15610): No output dependent on input pin "EXT_IO5_RO2_485"
+    Warning (15610): No output dependent on input pin "RXD3_A"
+    Warning (15610): No output dependent on input pin "EXT_IO1_TX3"
+    Warning (15610): No output dependent on input pin "EXT_IO16_TX2_A"
+    Warning (15610): No output dependent on input pin "EXT_IO14_TX1_A"
+Info: Implemented 7051 device resources after synthesis - the final resource count might be different
+    Info: Implemented 22 input pins
+    Info: Implemented 23 output pins
+    Info: Implemented 2 bidirectional pins
+    Info: Implemented 7004 logic cells
+Info: Quartus II Analysis & Synthesis was successful. 0 errors, 56 warnings
+    Info: Peak virtual memory: 298 megabytes
+    Info: Processing ended: Tue Jan 14 15:45:31 2020
+    Info: Elapsed time: 00:00:53
+    Info: Total CPU time (on all processors): 00:00:52
+
+

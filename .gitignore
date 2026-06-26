@@ -1,0 +1,29 @@
+# FPGA GoWin 编译产物
+**/impl/
+**/impl_*/
+**/temp/
+**/work/
+
+# GoWin 临时文件
+*.gcov
+*.gvo
+*.gvi
+*.gvhd
+*.gv
+**/_build/
+
+# 仿真文件
+*.wlf
+*.vcd
+*.vpd
+**/simulation/
+
+# IDE 临时文件
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Windows
+desktop.ini

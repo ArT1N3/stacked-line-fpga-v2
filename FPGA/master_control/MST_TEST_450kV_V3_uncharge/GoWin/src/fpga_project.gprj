@@ -1,0 +1,44 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1N-9C" pn="GW1N-UV9QN88C6/I5">gw1n9c-011</Device>
+    <FileList>
+        <File path="AD_MCP3202.vhd" type="file.vhdl" enable="1"/>
+        <File path="AD_trig.vhd" type="file.vhdl" enable="1"/>
+        <File path="Const_3.vhd" type="file.vhdl" enable="1"/>
+        <File path="FPGA_TO_PC.vhd" type="file.vhdl" enable="1"/>
+        <File path="LED_TEST.vhd" type="file.vhdl" enable="1"/>
+        <File path="LED_TEST2.vhd" type="file.vhdl" enable="1"/>
+        <File path="LEVEL_EDG.vhd" type="file.vhdl" enable="1"/>
+        <File path="LM75B_DRV1.vhd" type="file.vhdl" enable="1"/>
+        <File path="clk_Gen.vhd" type="file.vhdl" enable="1"/>
+        <File path="clk_div_10000.vhd" type="file.vhdl" enable="1"/>
+        <File path="clk_div_500.vhd" type="file.vhdl" enable="1"/>
+        <File path="com.vhd" type="file.vhdl" enable="1"/>
+        <File path="comp_clr.vhd" type="file.vhdl" enable="1"/>
+        <File path="coms.vhd" type="file.vhdl" enable="1"/>
+        <File path="comt.vhd" type="file.vhdl" enable="1"/>
+        <File path="comtx.vhd" type="file.vhdl" enable="1"/>
+        <File path="comuse.vhd" type="file.vhdl" enable="1"/>
+        <File path="countor10.vhd" type="file.vhdl" enable="1"/>
+        <File path="countor11.vhd" type="file.vhdl" enable="1"/>
+        <File path="countor3.vhd" type="file.vhdl" enable="1"/>
+        <File path="countor_T_over.vhd" type="file.vhdl" enable="1"/>
+        <File path="countor_addr_RX_cnt.vhd" type="file.vhdl" enable="1"/>
+        <File path="dat_CONFM_RX.vhd" type="file.vhdl" enable="1"/>
+        <File path="dat_store_RX.vhd" type="file.vhdl" enable="1"/>
+        <File path="delay_1.vhd" type="file.vhdl" enable="1"/>
+        <File path="hc74374.vhd" type="file.vhdl" enable="1"/>
+        <File path="lm75bd.vhd" type="file.vhdl" enable="1"/>
+        <File path="rcv_deal.vhd" type="file.vhdl" enable="1"/>
+        <File path="rcv_from_pc.vhd" type="file.vhdl" enable="1"/>
+        <File path="shift10.vhd" type="file.vhdl" enable="1"/>
+        <File path="top.vhd" type="file.vhdl" enable="1"/>
+        <File path="trig_100.vhd" type="file.vhdl" enable="1"/>
+        <File path="trig_rvs.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/fpga_project.cst" type="file.cst" enable="1"/>
+        <File path="src/fpga_project.sdc" type="file.sdc" enable="1"/>
+    </FileList>
+</Project>
