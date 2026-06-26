@@ -55,7 +55,8 @@
       "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\); cd D:\\\\CCwork\\\\test1; git status --short | Select-Object -First 5; echo \"---TOTAL_FILES---\"; \\(git status --short | Measure-Object\\).Count; echo \"---CHECK_IMPL---\"; git status --short | Select-String \"impl\")",
       "PowerShell(gh auth *)",
       "PowerShell(gh *)",
-      "PowerShell(Remove-Item *)"
+      "PowerShell(Remove-Item *)",
+      "PowerShell(git push *)"
     ]
   }
 }
