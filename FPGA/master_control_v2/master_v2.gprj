@@ -15,5 +15,23 @@
         <File path="src/master_v2_top.vhd" type="file.vhdl" enable="1"/>
         <File path="src/master_v2.cst" type="file.cst" enable="1"/>
         <File path="src/master_v2.sdc" type="file.sdc" enable="1"/>
+        <!-- PC UART 模块 -->
+        <File path="src/rcv_from_pc.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/FPGA_TO_PC.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/cmd_deal_m.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/comuse.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/countor_t_over.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/countor_addr_rx_cnt.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/comp_clr.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/rcv_deal.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/delay_1.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/com.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/shift10.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/hc74374.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/dat_store_RX.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/dat_CONFM_RX.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/countor10.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/countor3.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/LEVEL_EDG.vhd" type="file.vhdl" enable="1"/>
     </FileList>
 </Project>

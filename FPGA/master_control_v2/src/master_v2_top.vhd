@@ -69,7 +69,7 @@ end entity master_v2_top;
 architecture rtl of master_v2_top is
 
   --=========================================================================
-  -- ring_master 组件
+  -- V2.0 组件声明
   --=========================================================================
   component ring_master is
     port (
@@ -101,7 +101,9 @@ architecture rtl of master_v2_top is
     );
   end component;
 
-  -- V1.0 复用组件
+  --=========================================================================
+  -- V1.0 复用组件声明
+  --=========================================================================
   component mac_16 is
     port (in1, clk : in std_logic; o1 : out std_logic);
   end component;
@@ -119,7 +121,32 @@ architecture rtl of master_v2_top is
           dout, busy : out std_logic);
   end component;
 
-  -- 环网信号
+  -- PC UART 组件（V1.0）
+  component rcv_from_pc is
+    port (rxd, rst, clk : in std_logic;
+          ok : out std_logic;
+          aux, cmd, grp : out std_logic_vector(7 downto 0);
+          dat1, dat3, dat5, dat7, dat9 : out std_logic_vector(15 downto 0));
+  end component;
+  component fpga_to_pc is
+    port (cmd, grp, aux : in std_logic_vector(7 downto 0);
+          dat1, dat3, dat5, dat7, dat9, dat11, dat13 : in std_logic_vector(15 downto 0);
+          dat15 : in std_logic_vector(7 downto 0);
+          clk, clr_n : in std_logic;
+          dat : out std_logic_vector(7 downto 0);
+          ld : out std_logic);
+  end component;
+  component cmd_deal_m is
+    port (cmd : in std_logic_vector(7 downto 0);
+          en : in std_logic;
+          cmd01, cmd02, cmd03, cmd04, cmd05, cmd06, cmd07, cmd08,
+          cmd09, cmd0a, cmd0b, cmd0c, cmd0d, cmd0e, cmd0f,
+          cmd10, cmd11, cmd12, cmd13 : out std_logic);
+  end component;
+
+  --=========================================================================
+  -- 光纤环网信号
+  --=========================================================================
   signal fiber_rx_filt  : std_logic;
   signal clk_uart       : std_logic;
   signal rx_byte        : std_logic_vector(7 downto 0);
@@ -129,7 +156,7 @@ architecture rtl of master_v2_top is
   signal tx_serial      : std_logic;
   signal ring_ok        : std_logic;
 
-  -- 命令接口（从 PC 命令解析模块接入）
+  -- ring_master 命令接口
   signal cmd_req        : std_logic := '0';
   signal cmd_code       : std_logic_vector(7 downto 0) := (others => '0');
   signal cmd_dst        : std_logic_vector(7 downto 0) := (others => '0');
@@ -139,10 +166,50 @@ architecture rtl of master_v2_top is
   signal cmd_data_len   : std_logic_vector(7 downto 0) := (others => '0');
   signal master_busy    : std_logic;
 
+  -- ring_master 响应接口
+  signal rsp_valid      : std_logic;
+  signal rsp_err        : std_logic;
+  signal rsp_src        : std_logic_vector(7 downto 0);
+  signal rsp_cmd        : std_logic_vector(7 downto 0);
+  signal rsp_data       : std_logic_vector(7 downto 0);
+  signal rsp_data_len   : std_logic_vector(7 downto 0);
+
+  --=========================================================================
+  -- PC UART 信号
+  --=========================================================================
+  signal pc_cmd_valid   : std_logic;  -- rcv_from_pc.ok → 帧接收完成
+  signal pc_cmd         : std_logic_vector(7 downto 0);
+  signal pc_aux         : std_logic_vector(7 downto 0);
+  signal pc_grp         : std_logic_vector(7 downto 0);
+  signal pc_dat1        : std_logic_vector(15 downto 0);
+  signal pc_dat3        : std_logic_vector(15 downto 0);
+  signal pc_dat5        : std_logic_vector(15 downto 0);
+  signal pc_dat7        : std_logic_vector(15 downto 0);
+  signal pc_dat9        : std_logic_vector(15 downto 0);
+
+  -- PC TX 信号
+  signal pc_tx_dat      : std_logic_vector(7 downto 0);
+  signal pc_tx_ld       : std_logic;
+  signal pc_tx_busy     : std_logic;
+  signal pc_tx_serial   : std_logic;
+
+  -- 命令解码信号
+  signal cmd01, cmd02, cmd03, cmd04, cmd05, cmd06, cmd07, cmd08 : std_logic;
+  signal cmd09, cmd0a, cmd0b, cmd0c, cmd0d, cmd0e, cmd0f : std_logic;
+  signal cmd10, cmd11, cmd12, cmd13 : std_logic;
+
+  -- 响应数据锁存（FPGA_TO_PC 在 clr_n 下降沿锁存，用 clr_n 脉冲触发）
+  signal pc_clr_n       : std_logic := '1';
+  signal pc_rsp_cmd     : std_logic_vector(7 downto 0) := (others => '0');
+  signal pc_rsp_grp     : std_logic_vector(7 downto 0) := (others => '0');
+  signal pc_rsp_aux     : std_logic_vector(7 downto 0) := (others => '0');
+  signal pc_rsp_dat1    : std_logic_vector(15 downto 0) := (others => '0');
+  signal pc_rsp_dat3    : std_logic_vector(15 downto 0) := (others => '0');
+
 begin
 
   --=======================================================================
-  -- 光纤环网：RXD滤波 → UART RX → ring_master → UART TX → TXD
+  -- 1. 光纤环网：RXD滤波 → UART RX → ring_master → UART TX → TXD
   --=======================================================================
   u_rx_filter : mac_16
     port map (in1 => fiber_rx, clk => clk_50M, o1 => fiber_rx_filt);
@@ -162,9 +229,9 @@ begin
       cmd_data => cmd_data, cmd_data_len => cmd_data_len,
       cmd_wr_en => '0', cmd_wr_addr => x"00",
       master_busy => master_busy,
-      rsp_valid => open, rsp_err => open,
-      rsp_src => open, rsp_cmd => open,
-      rsp_data => open, rsp_data_len => open,
+      rsp_valid => rsp_valid, rsp_err => rsp_err,
+      rsp_src => rsp_src, rsp_cmd => rsp_cmd,
+      rsp_data => rsp_data, rsp_data_len => rsp_data_len,
       rx_byte => rx_byte, rx_lk => rx_lk, rx_busy => rx_busy,
       tx_byte => tx_byte, tx_load => tx_load, tx_busy => tx_busy,
       timeout_ms => x"64",
@@ -180,22 +247,131 @@ begin
   fiber_tx <= tx_serial;
 
   --=======================================================================
-  -- 状态指示
+  -- 2. PC UART RX：PC_RXD → rcv_from_pc（内置 comuse UART）→ 命令解析
   --=======================================================================
-  LED1 <= ring_ok;  -- 环网正常=亮
-  LED2 <= '0';
-  LED3 <= '0';
-  LED4 <= '0';
+  u_rcv_pc : rcv_from_pc
+    port map (
+      rxd  => PC_RXD,
+      rst  => '1',     -- 不复位，持续接收
+      clk  => clk_50M,
+      ok   => pc_cmd_valid,
+      aux  => pc_aux,
+      cmd  => pc_cmd,
+      grp  => pc_grp,
+      dat1 => pc_dat1,
+      dat3 => pc_dat3,
+      dat5 => pc_dat5,
+      dat7 => pc_dat7,
+      dat9 => pc_dat9
+    );
+
+  -- 命令解码：pc_cmd → 19个 one-hot 输出
+  u_cmd_deal : cmd_deal_m
+    port map (
+      cmd   => pc_cmd,
+      en    => pc_cmd_valid,
+      cmd01 => cmd01, cmd02 => cmd02, cmd03 => cmd03, cmd04 => cmd04,
+      cmd05 => cmd05, cmd06 => cmd06, cmd07 => cmd07, cmd08 => cmd08,
+      cmd09 => cmd09, cmd0a => cmd0a, cmd0b => cmd0b, cmd0c => cmd0c,
+      cmd0d => cmd0d, cmd0e => cmd0e, cmd0f => cmd0f,
+      cmd10 => cmd10, cmd11 => cmd11, cmd12 => cmd12, cmd13 => cmd13
+    );
 
   --=======================================================================
-  -- 以下为 V1.0 保留模块的占位连接
-  -- 实际集成时需要接入：
-  --   - PC UART (com_rx + com_tx + rcv_from_pc + fpga_to_pc)
-  --   - 充电机通信 (com_rx_charger + mast_to_charger)
-  --   - 命令处理 (cmd_deal_m → ring_master cmd_* 接口)
-  --   - ADC / I2C / 继电器 / 脉冲输出
+  -- 3. PC → ring_master 命令桥接
+  --    pc_cmd_valid 脉冲时，将 PC 命令翻译为环网命令
+  --    TODO: 完整的命令映射（当前为基本框架）
   --=======================================================================
-  PC_TXD   <= '1';   -- 占位
+  p_cmd_bridge : process(clk_50M)
+  begin
+    if rising_edge(clk_50M) then
+      -- 默认：不发起命令
+      cmd_req <= '0';
+
+      if pc_cmd_valid = '1' and master_busy = '0' then
+        -- PC 发来新命令且环网主控空闲时，发起环网命令
+        -- TODO: 根据 pc_cmd / pc_grp 映射 DST / MOD / BCAST
+        cmd_req      <= '1';
+        cmd_code     <= pc_cmd;           -- 直接传递命令码
+        cmd_dst      <= pc_grp;           -- V1.0 Grp 字段 = 目标地址
+        cmd_mod      <= pc_aux(1 downto 0); -- AUX 低 2 位 = 模块选择
+        cmd_is_bcast <= '0';              -- TODO: 广播命令判断
+        cmd_data_len <= x"00";            -- TODO: 从 pc_dat* 提取载荷
+      end if;
+    end if;
+  end process p_cmd_bridge;
+
+  --=======================================================================
+  -- 4. ring_master 响应 → PC UART TX
+  --    rsp_valid 脉冲时锁存响应数据 → fpga_to_pc → com_tx → PC_TXD
+  --=======================================================================
+  p_rsp_latch : process(clk_50M)
+  begin
+    if rising_edge(clk_50M) then
+      if rsp_valid = '1' then
+        pc_rsp_cmd  <= rsp_cmd;
+        pc_rsp_grp  <= rsp_src;           -- 响应源 = 从机地址
+        pc_rsp_aux  <= (others => '0');
+        pc_rsp_dat1 <= x"00" & rsp_data;   -- 响应数据放入 dat1 低字节
+        pc_rsp_dat3 <= (others => '0');
+      end if;
+    end if;
+  end process p_rsp_latch;
+
+  -- clr_n 脉冲生成：rsp_valid 触发一个低脉冲让 fpga_to_pc 锁存数据
+  p_clr_pulse : process(clk_50M)
+    variable cnt : integer range 0 to 7 := 0;
+  begin
+    if rising_edge(clk_50M) then
+      if rsp_valid = '1' then
+        cnt := 0;
+        pc_clr_n <= '0';
+      elsif cnt < 3 then
+        cnt := cnt + 1;
+        pc_clr_n <= '0';
+      else
+        pc_clr_n <= '1';
+      end if;
+    end if;
+  end process p_clr_pulse;
+
+  u_fpga_to_pc : fpga_to_pc
+    port map (
+      cmd   => pc_rsp_cmd,
+      grp   => pc_rsp_grp,
+      aux   => pc_rsp_aux,
+      dat1  => pc_rsp_dat1,
+      dat3  => pc_rsp_dat3,
+      dat5  => x"0000",
+      dat7  => x"0000",
+      dat9  => x"0000",
+      dat11 => x"0000",
+      dat13 => x"0000",
+      dat15 => x"00",
+      clk   => clk_50M,
+      clr_n => pc_clr_n,
+      dat   => pc_tx_dat,
+      ld    => pc_tx_ld
+    );
+
+  u_com_tx_pc : com_tx
+    port map (clk => clk_uart, ld => pc_tx_ld,
+              dat => pc_tx_dat, dout => pc_tx_serial, busy => pc_tx_busy);
+
+  PC_TXD <= pc_tx_serial;
+
+  --=======================================================================
+  -- 5. 状态指示
+  --=======================================================================
+  LED1 <= ring_ok;          -- 环网正常=亮
+  LED2 <= pc_cmd_valid;     -- PC 收到命令=闪
+  LED3 <= rsp_valid;        -- 环网响应=闪
+  LED4 <= master_busy;      -- 主控忙=亮
+
+  --=======================================================================
+  -- 6. 待集成的 V1.0 外设（占位）
+  --    TODO: 充电机 RS-485, PFC, ADC, I2C, 继电器, 脉冲触发
+  --=======================================================================
   CHG_TX   <= '1';
   CHG_EN   <= '0';
   CHG_DI   <= '0';
