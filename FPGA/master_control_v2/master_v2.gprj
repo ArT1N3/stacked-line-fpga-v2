@@ -39,5 +39,6 @@
         <File path="src/rcv_deal_ch.vhd" type="file.vhdl" enable="1"/>
         <File path="src/dat_store_RX_CH.vhd" type="file.vhdl" enable="1"/>
         <File path="src/dat_CONFM_RX_CH.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/RLY_CTR_8.vhd" type="file.vhdl" enable="1"/>
     </FileList>
 </Project>

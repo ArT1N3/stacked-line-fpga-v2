@@ -159,6 +159,14 @@ architecture rtl of master_v2_top is
           ld : out std_logic);
   end component;
 
+  -- 继电器控制
+  component rly_ctr_8 is
+    port (cmd_r, rst : in std_logic;
+          dat : in std_logic_vector(7 downto 0);
+          r1, r2, r3, r4, r5, r6, r7, r8 : out std_logic;
+          rly_st : out std_logic_vector(4 downto 0));
+  end component;
+
   --=========================================================================
   -- 光纤环网信号
   --=========================================================================
@@ -432,7 +440,21 @@ begin
   CHG_DI <= chg_tx_serial;
 
   --=======================================================================
-  -- 6. 状态指示
+  -- 6. 继电器控制（8路，只用前6路）
+  --=======================================================================
+  u_rly : rly_ctr_8
+    port map (
+      cmd_r => cmd03 or cmd0d,  -- RLY_CTRL or BROADCAST_RLY
+      rst   => '1',
+      dat   => pc_dat1(7 downto 0),
+      r1    => CTR_RLY1, r2 => CTR_RLY2, r3 => CTR_RLY3,
+      r4    => CTR_RLY4, r5 => CTR_RLY5, r6 => CTR_RLY6,
+      r7    => open, r8 => open,
+      rly_st => open
+    );
+
+  --=======================================================================
+  -- 7. 状态指示
   --=======================================================================
   LED1 <= ring_ok;          -- 环网正常=亮
   LED2 <= pc_cmd_valid;     -- PC 收到命令=闪
@@ -440,8 +462,8 @@ begin
   LED4 <= master_busy;      -- 主控忙=亮
 
   --=======================================================================
-  -- 7. 待集成的 V1.0 外设（占位）
-  --    TODO: PFC, ADC, I2C, 继电器, 脉冲触发
+  -- 8. 待集成的 V1.0 外设（占位）
+  --    TODO: PFC, ADC, I2C, 脉冲触发
   --=======================================================================
   PFC_TX   <= '1';
   AD_CS    <= '1';
@@ -451,12 +473,6 @@ begin
   SDA      <= 'Z';
   SCL_LM75 <= '1';
   SDA_LM75 <= 'Z';
-  CTR_RLY1 <= '0';
-  CTR_RLY2 <= '0';
-  CTR_RLY3 <= '0';
-  CTR_RLY4 <= '0';
-  CTR_RLY5 <= '0';
-  CTR_RLY6 <= '0';
   TRIG_OUT <= '0';
   DI_485   <= '0';
 
