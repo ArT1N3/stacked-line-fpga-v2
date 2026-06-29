@@ -144,6 +144,21 @@ architecture rtl of master_v2_top is
           cmd10, cmd11, cmd12, cmd13 : out std_logic);
   end component;
 
+  -- 充电机通信组件
+  component com_rx_charger is
+    port (din, clk, rst, rst_o : in std_logic;
+          confm : out std_logic;
+          adr, rsv, st, st2, tm1, tm2, tm3 : out std_logic_vector(7 downto 0);
+          bus_u, set_u, u_n, u_p : out std_logic_vector(15 downto 0));
+  end component;
+  component mast_to_charger is
+    port (cmd : in std_logic_vector(7 downto 0);
+          dat_u : in std_logic_vector(15 downto 0);
+          ask, clk, clr_n : in std_logic;
+          dat : out std_logic_vector(7 downto 0);
+          ld : out std_logic);
+  end component;
+
   --=========================================================================
   -- 光纤环网信号
   --=========================================================================
@@ -197,6 +212,25 @@ architecture rtl of master_v2_top is
   signal cmd01, cmd02, cmd03, cmd04, cmd05, cmd06, cmd07, cmd08 : std_logic;
   signal cmd09, cmd0a, cmd0b, cmd0c, cmd0d, cmd0e, cmd0f : std_logic;
   signal cmd10, cmd11, cmd12, cmd13 : std_logic;
+
+  -- 充电机通信信号
+  signal chg_rx_filt    : std_logic;
+  signal chg_confm      : std_logic;
+  signal chg_adr        : std_logic_vector(7 downto 0);
+  signal chg_rsv        : std_logic_vector(7 downto 0);
+  signal chg_st         : std_logic_vector(7 downto 0);
+  signal chg_st2        : std_logic_vector(7 downto 0);
+  signal chg_tm1        : std_logic_vector(7 downto 0);
+  signal chg_tm2        : std_logic_vector(7 downto 0);
+  signal chg_tm3        : std_logic_vector(7 downto 0);
+  signal chg_bus_u      : std_logic_vector(15 downto 0);
+  signal chg_set_u      : std_logic_vector(15 downto 0);
+  signal chg_u_n        : std_logic_vector(15 downto 0);
+  signal chg_u_p        : std_logic_vector(15 downto 0);
+  signal chg_tx_dat     : std_logic_vector(7 downto 0);
+  signal chg_tx_ld      : std_logic;
+  signal chg_tx_busy    : std_logic;
+  signal chg_tx_serial  : std_logic;
 
   -- 响应数据锁存（FPGA_TO_PC 在 clr_n 下降沿锁存，用 clr_n 脉冲触发）
   signal pc_clr_n       : std_logic := '1';
@@ -361,7 +395,44 @@ begin
   PC_TXD <= pc_tx_serial;
 
   --=======================================================================
-  -- 5. 状态指示
+  -- 5. 充电机 RS-485：CHG_RX → 滤波 → com_rx_charger，Mast_TO_Charger → com_tx → CHG_TX
+  --=======================================================================
+  u_chg_filter : mac_16
+    port map (in1 => CHG_RX, clk => clk_50M, o1 => chg_rx_filt);
+
+  u_chg_rx : com_rx_charger
+    port map (
+      din   => chg_rx_filt,
+      clk   => clk_uart,   -- UART 采样时钟 (921.6kHz)
+      rst   => '1',
+      rst_o => '1',
+      confm => chg_confm,
+      adr   => chg_adr, rsv => chg_rsv, st => chg_st, st2 => chg_st2,
+      tm1   => chg_tm1, tm2 => chg_tm2, tm3 => chg_tm3,
+      bus_u => chg_bus_u, set_u => chg_set_u, u_n => chg_u_n, u_p => chg_u_p
+    );
+
+  u_chg_tx_builder : mast_to_charger
+    port map (
+      cmd   => chg_st,        -- 充电机命令码（默认=ST查询）
+      dat_u => chg_set_u,     -- 电压设定值
+      ask   => '0',
+      clk   => clk_50M,
+      clr_n => chg_confm,     -- 收到充电机帧后触发响应
+      dat   => chg_tx_dat,
+      ld    => chg_tx_ld
+    );
+
+  u_com_tx_chg : com_tx
+    port map (clk => clk_uart, ld => chg_tx_ld,
+              dat => chg_tx_dat, dout => chg_tx_serial, busy => chg_tx_busy);
+
+  CHG_TX <= chg_tx_serial;
+  CHG_EN <= chg_tx_ld;   -- RS-485 TX enable: 发送时拉低使能
+  CHG_DI <= chg_tx_serial;
+
+  --=======================================================================
+  -- 6. 状态指示
   --=======================================================================
   LED1 <= ring_ok;          -- 环网正常=亮
   LED2 <= pc_cmd_valid;     -- PC 收到命令=闪
@@ -369,12 +440,9 @@ begin
   LED4 <= master_busy;      -- 主控忙=亮
 
   --=======================================================================
-  -- 6. 待集成的 V1.0 外设（占位）
-  --    TODO: 充电机 RS-485, PFC, ADC, I2C, 继电器, 脉冲触发
+  -- 7. 待集成的 V1.0 外设（占位）
+  --    TODO: PFC, ADC, I2C, 继电器, 脉冲触发
   --=======================================================================
-  CHG_TX   <= '1';
-  CHG_EN   <= '0';
-  CHG_DI   <= '0';
   PFC_TX   <= '1';
   AD_CS    <= '1';
   AD_CLK   <= '0';

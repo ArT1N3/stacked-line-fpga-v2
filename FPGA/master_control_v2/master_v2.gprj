@@ -33,5 +33,11 @@
         <File path="src/countor10.vhd" type="file.vhdl" enable="1"/>
         <File path="src/countor3.vhd" type="file.vhdl" enable="1"/>
         <File path="src/LEVEL_EDG.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/com_rx_charger.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/Mast_TO_Charger.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/countor_addr_RX_cnt_CH.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/rcv_deal_ch.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/dat_store_RX_CH.vhd" type="file.vhdl" enable="1"/>
+        <File path="src/dat_CONFM_RX_CH.vhd" type="file.vhdl" enable="1"/>
     </FileList>
 </Project>
