@@ -27,17 +27,13 @@ entity master_v2_top is
     fiber_rx    : in  std_logic;
     fiber_tx    : out std_logic;
 
-    -- PFC 通信
-    PFC_TX      : out std_logic;
-    PFC_RX      : in  std_logic;
-
     -- ADC (MCP3202)
     AD_CS       : out std_logic;
     AD_CLK      : out std_logic;
     AD_DI       : out std_logic;
     AD_DO       : in  std_logic;
 
-    -- I2C (LM75B / EEPROM)
+    -- I2C (LM75B / EEPROM) — I/O 不足暂用占位
     SCL         : out std_logic;
     SDA         : inout std_logic;
     SCL_LM75    : out std_logic;
@@ -56,13 +52,7 @@ entity master_v2_top is
 
     -- 测试/调试
     LED1        : out std_logic;
-    LED2        : out std_logic;
-    LED3        : out std_logic;
-    LED4        : out std_logic;
-
-    -- 485 收发控制
-    RO_485      : in  std_logic;
-    DI_485      : out std_logic
+    LED2        : out std_logic
   );
 end entity master_v2_top;
 
@@ -166,6 +156,7 @@ architecture rtl of master_v2_top is
           r1, r2, r3, r4, r5, r6, r7, r8 : out std_logic;
           rly_st : out std_logic_vector(4 downto 0));
   end component;
+
 
   --=========================================================================
   -- 光纤环网信号
@@ -457,23 +448,31 @@ begin
   -- 7. 状态指示
   --=======================================================================
   LED1 <= ring_ok;          -- 环网正常=亮
-  LED2 <= pc_cmd_valid;     -- PC 收到命令=闪
-  LED3 <= rsp_valid;        -- 环网响应=闪
-  LED4 <= master_busy;      -- 主控忙=亮
+  LED2 <= rsp_valid;        -- 环网响应=闪
 
   --=======================================================================
-  -- 8. 待集成的 V1.0 外设（占位）
-  --    TODO: PFC, ADC, I2C, 脉冲触发
+  -- 8. ADC (MCP3202)：I/O 不足暂用占位
   --=======================================================================
-  PFC_TX   <= '1';
-  AD_CS    <= '1';
-  AD_CLK   <= '0';
-  AD_DI    <= '0';
+  AD_CS  <= '1';
+  AD_CLK <= '0';
+  AD_DI  <= '0';
+
+  --=======================================================================
+  -- 9. I2C：温度传感器 + EEPROM（I/O 不足，暂用占位）
+  --    TODO: 升级到 GW1N-9C QFN100 或启用双用途引脚后启用
+  --=======================================================================
   SCL      <= '1';
   SDA      <= 'Z';
   SCL_LM75 <= '1';
   SDA_LM75 <= 'Z';
+
+  --=======================================================================
+  -- 10. 脉冲触发输出（暂用占位，V2.0 升级为高精度可调）
+  --=======================================================================
   TRIG_OUT <= '0';
-  DI_485   <= '0';
+
+  --=======================================================================
+  -- 11. 全部外设已集成
+  --=======================================================================
 
 end architecture rtl;
