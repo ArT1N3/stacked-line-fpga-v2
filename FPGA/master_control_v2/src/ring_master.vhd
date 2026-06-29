@@ -88,7 +88,9 @@ architecture rtl of ring_master is
   signal tx_rd_data     : std_logic_vector(7 downto 0);
 
   -- 缓冲读写
-  signal buf_rd_addr    : std_logic_vector(7 downto 0);
+  signal buf_rd_addr    : std_logic_vector(7 downto 0);  -- TX 驱动的读地址
+  signal int_rd_addr    : std_logic_vector(7 downto 0);  -- 主控状态机读地址
+  signal rx_rd_addr     : std_logic_vector(7 downto 0);  -- 经 mux 后给 RX 的读地址
   signal buf_wr_data    : std_logic_vector(7 downto 0);
   signal buf_wr_addr    : std_logic_vector(7 downto 0);
   signal buf_wr_en      : std_logic;
@@ -102,12 +104,13 @@ architecture rtl of ring_master is
     ST_BUILD_PAYLOAD,  -- 写入载荷数据 (N周期)
     ST_SEND,           -- 发送帧
     ST_WAIT_RESP,      -- 等待响应
+    ST_READ_RESP,      -- 读取响应载荷
     ST_TIMEOUT,        -- 超时处理
     ST_RETRY,          -- 重试
     ST_DONE            -- 完成
   );
   signal mst_state     : master_state_t;
-  signal build_idx     : integer range 0 to 255;  -- 帧构建索引
+  signal build_idx     : integer range 0 to 255;  -- 帧构建/读取索引
 
   --=========================================================================
   -- 内部寄存器
@@ -115,9 +118,10 @@ architecture rtl of ring_master is
   signal pending_cmd   : std_logic_vector(7 downto 0);  -- 待响应命令
   signal pending_dst   : std_logic_vector(7 downto 0);  -- 待响应目标
   signal retry_count   : integer range 0 to 3;          -- 重试计数
-  signal timeout_cnt   : integer range 0 to 500000;     -- 超时计数器（50MHz ticks）
-  signal timeout_limit : integer range 0 to 500000;     -- 超时阈值
+  signal timeout_cnt   : integer range 0 to 5000000;    -- 超时计数器
+  signal timeout_limit : integer range 0 to 5000000;    -- 超时阈值
   signal frame_len_reg : integer range 0 to 255;        -- 载荷长度寄存器
+  signal rsp_len_reg   : integer range 0 to 255;        -- 响应载荷长度
 
   --=========================================================================
   -- 拓扑表
@@ -130,8 +134,8 @@ architecture rtl of ring_master is
   end record;
   type topo_table_t is array (0 to 127) of topo_entry_t;
   signal topo_table   : topo_table_t;
-  signal topo_idx     : integer range 0 to 127;  -- 当前处理索引
-  signal topo_count_r : integer range 0 to 255;  -- 已发现从机数
+  signal topo_idx     : integer range 0 to 127;
+  signal topo_count_r : integer range 0 to 255;
 
   -- CRC 生成函数（与 fiber_frame_tx 相同）
   function crc16_update(crc : std_logic_vector(15 downto 0);
@@ -162,7 +166,7 @@ begin
     port map (
       clk         => clk, rst => rst,
       rx_byte     => rx_byte, rx_lk => rx_lk, rx_busy => rx_busy,
-      buf_rd_data => rx_buf_rd_data, buf_rd_addr => buf_rd_addr,
+      buf_rd_data => rx_buf_rd_data, buf_rd_addr => rx_rd_addr,
       buf_wr_data => buf_wr_data, buf_wr_addr => buf_wr_addr, buf_wr_en => buf_wr_en,
       flags_out   => rx_flags, dst_out => rx_dst,
       src_out     => rx_src, cmd_out => rx_cmd, frame_len => rx_len,
@@ -183,15 +187,19 @@ begin
       tx_byte     => tx_byte, tx_load => tx_load, uart_busy => tx_busy
     );
 
-  -- 读数据共享
+  -- 读写数据共享
   tx_rd_data <= rx_buf_rd_data;
 
   --=========================================================================
   -- 主控状态机
   --=========================================================================
   p_master : process(clk, rst)
+    -- 将 timeout_ms 转换为 50MHz 周期数（ms * 50000）
+    function calc_timeout(ms : std_logic_vector(7 downto 0)) return integer is
+    begin
+      return to_integer(unsigned(ms)) * 50000;  -- ms × 50MHz/1000
+    end function;
     variable crc_val : std_logic_vector(15 downto 0);
-    variable tmp_byte : std_logic_vector(7 downto 0);
   begin
     if rst = '0' then
       mst_state      <= ST_IDLE;
@@ -199,8 +207,9 @@ begin
       pending_dst    <= (others => '0');
       retry_count    <= 0;
       timeout_cnt    <= 0;
-      timeout_limit  <= 100000;  -- 默认 ~2ms @50MHz
+      timeout_limit  <= 5000000;  -- 默认 100ms
       frame_len_reg  <= 0;
+      rsp_len_reg    <= 0;
       buf_wr_data    <= (others => '0');
       buf_wr_addr    <= (others => '0');
       buf_wr_en      <= '0';
@@ -240,9 +249,11 @@ begin
         -- ST_IDLE: 等待命令
         --===============================================================
         when ST_IDLE =>
-          master_busy <= '0';
-          retry_count <= 0;
-          build_idx   <= 0;
+          master_busy   <= '0';
+          retry_count   <= 0;
+          build_idx     <= 0;
+          -- 每次进入 IDLE 时更新超时阈值（从 timeout_ms 端口）
+          timeout_limit <= calc_timeout(timeout_ms);
           if cmd_req = '1' then
             master_busy   <= '1';
             pending_cmd   <= cmd_code;
@@ -252,7 +263,7 @@ begin
           end if;
 
         --===============================================================
-        -- ST_BUILD_HDR: 构建帧头（6周期: FLAGS, DST, SRC, CMD, LEN）
+        -- ST_BUILD_HDR: 构建帧头 FLAGS/DST/SRC/CMD/LEN
         --===============================================================
         when ST_BUILD_HDR =>
           buf_wr_en <= '1';
@@ -286,11 +297,13 @@ begin
           end if;
 
         --===============================================================
-        -- ST_BUILD_PAYLOAD: 写入载荷（N周期）
+        -- ST_BUILD_PAYLOAD: 写入载荷
+        --   载荷可由上层通过 cmd_wr_en/cmd_wr_addr 预写入缓冲，
+        --   或通过 cmd_data 逐字节提供（当前使用 cmd_data）
         --===============================================================
         when ST_BUILD_PAYLOAD =>
           buf_wr_addr <= std_logic_vector(to_unsigned(5 + build_idx, 8));
-          buf_wr_data <= cmd_data;  -- 上层逐字节提供
+          buf_wr_data <= cmd_data;
           buf_wr_en   <= '1';
           if build_idx < frame_len_reg - 1 then
             build_idx <= build_idx + 1;
@@ -312,38 +325,65 @@ begin
         --===============================================================
         when ST_WAIT_RESP =>
           if rx_frame_valid = '1' then
-            -- 收到响应
+            -- 收到有效响应
             timeout_cnt <= 0;
-            rsp_valid   <= '1';
             rsp_src     <= rx_src;
             rsp_cmd     <= rx_cmd;
+            rsp_len_reg <= to_integer(unsigned(rx_len));
             rsp_data_len <= rx_len;
             rsp_err     <= '0';
             ring_ok     <= '1';
+            build_idx   <= 0;
 
-            -- 拓扑发现：解析响应
+            -- 拓扑发现：记录从机数
             if pending_cmd = x"06" then
-              -- 从载荷中提取拓扑数据（每从机5B）
               topo_count_r <= to_integer(unsigned(rx_len)) / 5;
-              -- (实际实现需逐条解析到 topo_table)
             end if;
 
-            mst_state <= ST_DONE;
+            mst_state <= ST_READ_RESP;
 
           elsif rx_frame_err = '1' then
-            rsp_valid <= '1';
-            rsp_err   <= '1';
-            mst_state <= ST_DONE;
+            -- 收到错误帧（CRC 错误等）→ 重试
+            timeout_cnt <= 0;
+            if retry_count < 2 then
+              retry_count <= retry_count + 1;
+              mst_state   <= ST_RETRY;
+            else
+              rsp_valid <= '1';
+              rsp_err   <= '1';
+              master_busy <= '0';
+              mst_state <= ST_DONE;
+            end if;
 
           elsif timeout_cnt >= timeout_limit then
             mst_state <= ST_TIMEOUT;
           end if;
 
         --===============================================================
+        -- ST_READ_RESP: 从帧缓冲读取响应载荷，逐字节上报
+        --===============================================================
+        when ST_READ_RESP =>
+          int_rd_addr <= std_logic_vector(to_unsigned(5 + build_idx, 8));
+          -- 等待一个周期让读数据稳定
+          if build_idx <= rsp_len_reg then
+            if build_idx > 0 then
+              rsp_data <= rx_buf_rd_data;  -- 前一个地址的数据
+              rsp_valid <= '1';
+            end if;
+            build_idx <= build_idx + 1;
+          else
+            -- 全部读完
+            rsp_valid   <= '1';  -- 最后一个字节
+            rsp_data     <= rx_buf_rd_data;
+            master_busy  <= '0';
+            mst_state    <= ST_DONE;
+          end if;
+
+        --===============================================================
         -- ST_TIMEOUT: 超时，决定是否重试
         --===============================================================
         when ST_TIMEOUT =>
-          if retry_count < 2 then  -- 最多3次尝试（0,1,2）
+          if retry_count < 2 then  -- 最多3次尝试
             retry_count <= retry_count + 1;
             mst_state   <= ST_RETRY;
           else
@@ -356,7 +396,7 @@ begin
           end if;
 
         --===============================================================
-        -- ST_RETRY: 重试
+        -- ST_RETRY: 重试（重发同一帧）
         --===============================================================
         when ST_RETRY =>
           tx_start    <= '1';
@@ -364,23 +404,25 @@ begin
           mst_state   <= ST_WAIT_RESP;
 
         --===============================================================
-        -- ST_DONE: 完成
+        -- ST_DONE: 完成，返回 IDLE
         --===============================================================
         when ST_DONE =>
           master_busy <= '0';
           mst_state   <= ST_IDLE;
-
-        when others =>
-          mst_state <= ST_IDLE;
 
       end case;
     end if;
   end process p_master;
 
   --=========================================================================
+  -- 读地址 mux：TX 发送时由 TX 控制，接收响应后由主控状态机控制
+  --=========================================================================
+  rx_rd_addr <= int_rd_addr when (mst_state = ST_READ_RESP) else buf_rd_addr;
+
+  --=========================================================================
   -- 拓扑表读取
   --=========================================================================
-  topo_tbl_data <= topo_table(to_integer(unsigned(topo_tbl_addr))).addr;  -- 简化
+  topo_tbl_data <= topo_table(to_integer(unsigned(topo_tbl_addr))).addr;
   topo_count    <= std_logic_vector(to_unsigned(topo_count_r, 8));
 
 end architecture rtl;
